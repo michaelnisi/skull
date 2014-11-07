@@ -1,6 +1,6 @@
 //
 //  QueryTests.swift
-//  SQLiteKit
+//  Skull
 //
 //  Created by Michael Nisi on 16.10.14.
 //  Copyright (c) 2014 Michael Nisi. All rights reserved.
@@ -8,18 +8,17 @@
 
 import UIKit
 import XCTest
-import Skull
 
 class QueryTests: XCTestCase {
   var db: Skull?
-  
+
   func load () -> String {
     let (er, sql) = sqlFrom(NSBundle(forClass: self.dynamicType), "some")
     XCTAssertNil(er)
     XCTAssertNotNil(sql)
     return sql!
   }
-  
+
   override func setUp () {
     super.setUp()
     db = Skull()
@@ -31,12 +30,12 @@ class QueryTests: XCTestCase {
     }
     XCTAssertNil(er)
   }
-  
+
   override func tearDown () {
     XCTAssertNil(db!.close())
     super.tearDown()
   }
-  
+
   func testQuery () {
     let sql = "SELECT * FROM t1"
     var count = 0

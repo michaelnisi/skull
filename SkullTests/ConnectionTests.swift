@@ -1,6 +1,6 @@
 //
 //  ConnectionTests.swift
-//  SQLiteKit
+//  Skull
 //
 //  Created by Michael Nisi on 16.10.14.
 //  Copyright (c) 2014 Michael Nisi. All rights reserved.
@@ -39,14 +39,13 @@ class ConnectionTests: XCTestCase {
   func testClose () {
     if let url = documents(filename) {
       db = Skull()
-      XCTAssertNil(db!.close())
       XCTAssertNil(db!.open(url: url))
       XCTAssertNil(db!.close())
       if let found = db!.close() {
         let wanted = NSError(
           domain: "com.michaelnisi.skull"
-        , code: 21
-        , userInfo: ["message": "library routine called out of sequence"]
+        , code: 0
+        , userInfo: ["message": "not open"]
         )
         XCTAssertEqual(found, wanted)
       } else {

@@ -15,5 +15,3 @@ FOUNDATION_EXPORT double SkullVersionNumber;
 FOUNDATION_EXPORT const unsigned char SkullVersionString[];
 
 // In this header, you should import all the public headers of your framework using statements like #import <Skull/PublicHeader.h>
-
-

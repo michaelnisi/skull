@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		4C7171C819F6AB9500C7AB0D /* Skull.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7171C719F6AB9500C7AB0D /* Skull.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C7171DF19F6ABD100C7AB0D /* skull_helpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171DB19F6ABD100C7AB0D /* skull_helpers.c */; };
-		4C7171E019F6ABD100C7AB0D /* skull_helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7171DC19F6ABD100C7AB0D /* skull_helpers.h */; };
 		4C7171E219F6ABD100C7AB0D /* Skull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171DE19F6ABD100C7AB0D /* Skull.swift */; };
 		4C7171EB19F6ABFB00C7AB0D /* affinity.sql in Resources */ = {isa = PBXBuildFile; fileRef = 4C7171E319F6ABFB00C7AB0D /* affinity.sql */; };
 		4C7171EC19F6ABFB00C7AB0D /* common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171E419F6ABFB00C7AB0D /* common.swift */; };
@@ -21,6 +20,8 @@
 		4C7171F219F6ABFB00C7AB0D /* UpdateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171EA19F6ABFB00C7AB0D /* UpdateTests.swift */; };
 		4C7171F419F6AD2300C7AB0D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C7171F319F6AD2300C7AB0D /* libsqlite3.dylib */; };
 		4C7171F519F6AD6F00C7AB0D /* Skull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171DE19F6ABD100C7AB0D /* Skull.swift */; };
+		4C92A01B19F7EA5100310F03 /* skull_helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7171DC19F6ABD100C7AB0D /* skull_helpers.h */; };
+		4C92A01C19F7EC3200310F03 /* skull_helpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171DB19F6ABD100C7AB0D /* skull_helpers.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -143,7 +144,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C7171C819F6AB9500C7AB0D /* Skull.h in Headers */,
-				4C7171E019F6ABD100C7AB0D /* skull_helpers.h in Headers */,
+				4C92A01B19F7EA5100310F03 /* skull_helpers.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +257,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C7171EC19F6ABFB00C7AB0D /* common.swift in Sources */,
+				4C92A01C19F7EC3200310F03 /* skull_helpers.c in Sources */,
 				4C7171F219F6ABFB00C7AB0D /* UpdateTests.swift in Sources */,
 				4C7171F519F6AD6F00C7AB0D /* Skull.swift in Sources */,
 				4C7171EF19F6ABFB00C7AB0D /* QueryTests.swift in Sources */,
@@ -279,6 +281,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -295,6 +298,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				CURRENT_PROJECT_VERSION = 1.0.0;
+				DEFINES_MODULE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -310,10 +314,13 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MODULEMAP_FILE = "";
+				MODULEMAP_PRIVATE_FILE = "";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SWIFT_INCLUDE_PATHS = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
@@ -325,6 +332,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -341,6 +349,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				CURRENT_PROJECT_VERSION = 1.0.0;
+				DEFINES_MODULE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -350,9 +359,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				MODULEMAP_FILE = "";
+				MODULEMAP_PRIVATE_FILE = "";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_INCLUDE_PATHS = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -370,9 +382,13 @@
 				INFOPLIST_FILE = Skull/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "";
+				MODULEMAP_PRIVATE_FILE = "$(SRCROOT)/module/module.map";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = module;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/module";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 			};
 			name = Debug;
 		};
@@ -386,15 +402,20 @@
 				INFOPLIST_FILE = Skull/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "";
+				MODULEMAP_PRIVATE_FILE = "$(SRCROOT)/module/module.map";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = module;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/module";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 			};
 			name = Release;
 		};
 		4C7171D919F6AB9500C7AB0D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -406,13 +427,15 @@
 				INFOPLIST_FILE = SkullTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_INCLUDE_PATHS = module;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/module";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
 			};
 			name = Debug;
 		};
 		4C7171DA19F6AB9500C7AB0D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -420,7 +443,8 @@
 				INFOPLIST_FILE = SkullTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_INCLUDE_PATHS = module;
+				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/module";
+				SWIFT_INSTALL_OBJC_HEADER = YES;
 			};
 			name = Release;
 		};
@@ -434,7 +458,7 @@
 				4C7171D419F6AB9500C7AB0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
 		4C7171D519F6AB9500C7AB0D /* Build configuration list for PBXNativeTarget "Skull" */ = {
 			isa = XCConfigurationList;
@@ -443,6 +467,7 @@
 				4C7171D719F6AB9500C7AB0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
 		4C7171D819F6AB9500C7AB0D /* Build configuration list for PBXNativeTarget "SkullTests" */ = {
 			isa = XCConfigurationList;
@@ -451,6 +476,7 @@
 				4C7171DA19F6AB9500C7AB0D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};

@@ -1,6 +1,6 @@
 //
 //  common.swift
-//  SQLiteKit
+//  Skull
 //
 //  Created by Michael Nisi on 14.10.14.
 //  Copyright (c) 2014 Michael Nisi. All rights reserved.
@@ -11,12 +11,12 @@ import Foundation
 func sqlFrom (bundle: NSBundle, name: String) -> (NSError?, String?) {
   var er: NSError?
   if let path = bundle.pathForResource(name, ofType: "sql") {
-    if let sql = String.stringWithContentsOfFile(
-      path
+    if let sql = String(
+      contentsOfFile: path
     , encoding: NSUTF8StringEncoding
     , error: &er
     ) {
-        return (er, sql)
+      return (er, sql)
     }
   } else {
     er = NSError(

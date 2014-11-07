@@ -1,6 +1,6 @@
 //
 //  UpdateTests.swift
-//  SQLiteKit
+//  Skull
 //
 //  Created by Michael Nisi on 19.10.14.
 //  Copyright (c) 2014 Michael Nisi. All rights reserved.
@@ -8,18 +8,17 @@
 
 import UIKit
 import XCTest
-import Skull
 
 class UpdateTests: XCTestCase {
   var db: Skull?
-  
+
   func load () -> String {
     let (er, sql) = sqlFrom(NSBundle(forClass: self.dynamicType), "some")
     XCTAssertNil(er)
     XCTAssertNotNil(sql)
     return sql!
   }
-  
+
   override func setUp () {
     super.setUp()
     db = Skull()
@@ -31,7 +30,7 @@ class UpdateTests: XCTestCase {
     }
     XCTAssertNil(er)
   }
-  
+
   override func tearDown () {
     XCTAssertNil(db!.close())
     super.tearDown()
@@ -58,7 +57,7 @@ class UpdateTests: XCTestCase {
     }
     XCTAssertEqual(count, 3)
   }
-  
+
   func testUpdateFail () {
     XCTAssertNil(db!.update("DELETE FROM t1"))
     XCTAssertNotNil(db!.update("INSERT INTO t1 VALUES (?,?,?,?,?"))
@@ -78,45 +77,36 @@ class UpdateTests: XCTestCase {
     }
     XCTAssertEqual(count, 1) // one empty row because we don't validate
   }
-  
-  func testAsyncTransaction () {
-    let q = dispatch_queue_create(domain, DISPATCH_QUEUE_SERIAL)
-    let exp = self.expectationWithDescription("transaction")
-    dispatch_async(q, {
-      let db = Skull()
-      XCTAssertNil(db.open())
-      XCTAssertNil(db.update("BEGIN IMMEDIATE;"))
-      XCTAssertNil(db.update("CREATE TABLE shows (id INTEGER PRIMARY KEY, title TEXT);"))
-      let shows = ["Fargo", "Game Of Thrones", "The Walking Dead"]
-      for show in shows {
-        if let er = db.update("INSERT INTO shows VALUES (?, ?);", nil, show) {
-          XCTFail("shouldn't error")
-        }
-      }
-      XCTAssertNil(db.update("COMMIT;"))
-      var count = 0
-      XCTAssertNil(db.query("SELECT * FROM shows") { er, row in
-        XCTAssertNil(er)
-        XCTAssertNotNil(row)
-        println(row)
-        count++
-        return 0
-      })
-      XCTAssertEqual(count, 3)
-      
-      XCTAssertEqual(db.cache.count, 5, "should cache statements")
-      XCTAssertNil(db.query("SELECT * FROM shows") { er, row in
-        XCTAssertNil(er)
-        XCTAssertNotNil(row)
-        return 0
-      })
-      XCTAssertNil(db.close(), "should finalize statements")
-      XCTAssert(db.cache.isEmpty, "should purge statements")
-      exp.fulfill()
-    })
-    self.waitForExpectationsWithTimeout(10) { (er) in
-      XCTAssertNil(er)
-      dispatch_release(q)
+
+  func testTransaction () {
+    let db = Skull()
+    XCTAssertNil(db.open())
+    XCTAssertNil(db.update("BEGIN IMMEDIATE;"))
+    XCTAssertNil(db.update(
+     "CREATE TABLE shows(id INTEGER PRIMARY KEY, title TEXT);"
+    ))
+    for show: String in ["Fargo", "Game Of Thrones", "The Walking Dead"] {
+      XCTAssertNil(db.update(
+        "INSERT INTO shows(id, title) VALUES(?, ?);", nil, show
+      ))
     }
+    XCTAssertNil(db.update("COMMIT;"))
+    var count = 0
+    XCTAssertNil(db.query("SELECT * FROM shows") { er, row in
+      XCTAssertNil(er)
+      XCTAssertNotNil(row)
+      count++
+      return 0
+    })
+    XCTAssertEqual(count, 3)
+
+    XCTAssertEqual(db.cache.count, 5, "should cache statements")
+    XCTAssertNil(db.query("SELECT * FROM shows") { er, row in
+      XCTAssertNil(er)
+      XCTAssertNotNil(row)
+      return 0
+    })
+    XCTAssertNil(db.close(), "should finalize statements")
+    XCTAssert(db.cache.isEmpty, "should purge statements")
   }
 }

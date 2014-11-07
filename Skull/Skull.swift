@@ -57,9 +57,15 @@ func ok (code: CInt, ctx: COpaquePointer) -> NSError? {
 }
 
 public class Skull: Printable {
-  var ctx: COpaquePointer = nil
-  var urls = [NSURL]()
-  var cache = [String:COpaquePointer]()
+  var ctx: COpaquePointer
+  var urls: [NSURL]
+  var cache: [String:COpaquePointer]
+
+  public init () {
+    ctx = nil
+    urls = [NSURL]()
+    cache = [String:COpaquePointer]()
+  }
 
   public var description: String {
     return "Skull: \(urls)"
@@ -90,17 +96,19 @@ public class Skull: Printable {
   }
 
   public func flush () -> NSError? {
+    var errors = [NSError]()
     for (sql, pStmt) in cache {
-      if cache.removeValueForKey(sql) == nil { // highly unlikely
-        return NSError(
-          domain: domain
-        , code: 0
-        , userInfo: ["message": "key not present"]
-        )
-      }
       if let er = ok(sqlite3_finalize(pStmt), ctx) {
-        return er
+        errors.append(er)
       }
+    }
+    cache.removeAll()
+    if errors.count > 0 {
+      return NSError(
+        domain: domain
+      , code: 0
+      , userInfo: ["message": "couldn't finalize all prepared statements"]
+      )
     }
     return nil
   }
@@ -109,7 +117,18 @@ public class Skull: Printable {
     if let er = flush() {
       return er
     }
-    return ok(sqlite3_close(ctx), ctx)
+    if ctx == nil {
+      return NSError(
+        domain: domain
+      , code: 0
+      , userInfo: ["message": "not open"]
+      )
+    }
+    if let er = ok(sqlite3_close(ctx), ctx) { // accepts nil
+      return er
+    }
+    ctx = nil
+    return nil
   }
 
   public func exec
@@ -138,7 +157,7 @@ public class Skull: Printable {
         if errors > 0 {
           er = NSError(
             domain: domain
-          , code: 0 // just a warning
+          , code: 0
           , userInfo: ["message": "got NULL from CString"]
           )
         }
@@ -248,46 +267,40 @@ public class Skull: Printable {
         cache[sql] = pStmt
       }
     }
-    func fin (er: NSError) -> NSError? {
-      if let fer = ok(sqlite3_finalize(pStmt), ctx) {
-        return fer
-      }
-      return er
-    }
     var i: CInt = 0
     for (index, param) in enumerate(params) {
       i = CInt(index + 1)
       if param == nil {
         if let er = ok(sqlite3_bind_null(pStmt, i), ctx) {
-          return fin(er)
+          return er
         }
       } else if let value = param as? Int {
         let c = CInt(value)
         if let er = ok(sqlite3_bind_int(pStmt, i, c), ctx) {
-          return fin(er)
+          return er
         }
       } else if let value = param as? Float {
         let c = CDouble(value)
         if let er = ok(sqlite3_bind_double(pStmt, i, c), ctx) {
-          return fin(er)
+          return er
         }
       } else if let value = param as? Double {
         let c = CDouble(value)
         if let er = ok(sqlite3_bind_double(pStmt, i, c), ctx) {
-          return fin(er)
+          return er
         }
       } else if let value = param as? String {
         let c = value
         let len = CInt(countElements(value))
         if let er = ok(skull_bind_text(pStmt, i, c, len), ctx) {
-          return fin(er)
+          return er
         }
       } else {
-        return fin(NSError(
+        return NSError(
           domain: domain
         , code: 1
         , userInfo: ["message": "unsupported type \(param)"]
-        ))
+        )
       }
     }
     return run(pStmt, nil)

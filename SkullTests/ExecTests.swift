@@ -1,6 +1,6 @@
 //
 //  ExecTests.swift
-//  ExecTests
+//  Skull
 //
 //  Created by Michael Nisi on 12.10.14.
 //  Copyright (c) 2014 Michael Nisi. All rights reserved.
@@ -8,7 +8,6 @@
 
 import UIKit
 import XCTest
-import Skull
 
 enum SQLiteTypeAffinity: String {
   case NULL = "null"
@@ -20,32 +19,32 @@ enum SQLiteTypeAffinity: String {
 
 class ExecTests: XCTestCase {
   var db: Skull?
-  
+
   override func setUp () {
     super.setUp()
-      db = Skull() // in-memory
-      XCTAssertNil(db!.open())
+    db = Skull() // in-memory
+    XCTAssertNil(db!.open())
   }
-  
+
   override func tearDown () {
     XCTAssertNil(db!.close())
     super.tearDown()
   }
-  
+
   func load () -> String {
     let (er, sql) = sqlFrom(NSBundle(forClass: self.dynamicType), "affinity")
     XCTAssertNil(er)
     XCTAssertNotNil(sql)
     return sql!
   }
-  
+
   func testExec () {
     typealias Row = [String:String]
     func row (t: [SQLiteTypeAffinity]) -> Row {
       let names = ["t", "nu", "i", "r", "no"]
       var row = [String:String]()
       for (i, type: SQLiteTypeAffinity) in enumerate(t) {
-        row["typeof(\(names[i]))"] = type.toRaw()
+        row["typeof(\(names[i]))"] = type.rawValue
       }
       return row
     }
@@ -76,7 +75,7 @@ class ExecTests: XCTestCase {
     XCTAssertNil(db!.exec("SELECT * FROM t1"), "should be ok without callback")
     XCTAssertEqual(count, r.count)
   }
-  
+
   func testExecAbort () {
     let sql = load()
     var count = 0
