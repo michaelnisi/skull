@@ -89,7 +89,15 @@ Flushes cache and closes database connection.
 
 ## Install
 
-Add the `Skull.xcodeproj` to your workspace and add `Skull.framework` to a target of the project you want to use it in.
+To install do:
+
+```bash
+$ make
+```
+
+This creates `module/module.map`, builds, and runs the tests.
+
+Then add `Skull.xcodeproj` to your workspace and add `Skull.framework` to a target of the project you want to use it in.
 
 ## License
 
