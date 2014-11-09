@@ -6,24 +6,23 @@
 //  Copyright (c) 2014 Michael Nisi. All rights reserved.
 //
 
-import UIKit
 import XCTest
 
 class ConnectionTests: XCTestCase {
   var db: Skull?
   let filename: String = "affinity.db"
-  
+
   override func setUp () {
     super.setUp()
     rm(filename) // you never know
   }
-  
+
   override func tearDown () {
     db!.close()
     XCTAssertNil(rm(filename))
     super.tearDown()
   }
-  
+
   func testOpen() {
     if let url = documents(filename) {
       db = Skull()
@@ -35,7 +34,7 @@ class ConnectionTests: XCTestCase {
     XCTAssertNil(db!.open())
     XCTAssertNil(db!.open())
   }
-  
+
   func testClose () {
     if let url = documents(filename) {
       db = Skull()

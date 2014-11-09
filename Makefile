@@ -3,10 +3,15 @@ project=Skull.xcodeproj
 scheme=SkullTests
 sdk=iphonesimulator
 
-all: test
+all: clean build
 
-test: modularize
+clean:
+	-rm -rf build
+
+build:
+	xcodebuild -configuration Debug build
+
+test:
 	xctool test -project $(project) -scheme $(scheme) -sdk $(sdk)
 
-modularize:
-	sed -e "s;%SRC%;`pwd`/Skull;g" module/module.map.in > module/module.map
+.PHONY: all clean test

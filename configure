@@ -1,0 +1,20 @@
+#!/bin/bash
+
+SDK=$SDKROOT
+if test -z "$SDK"
+then
+  if [ -n "$1" ]; then
+    SDK=$1
+  else
+    L=`xcodebuild -showBuildSettings | grep SDKROOT`
+    ARR=($L)
+    SDK=${ARR[2]}
+  fi
+fi
+
+SQLITE="usr/include/sqlite3.h"
+
+sed \
+  -e "s;%SRC%;`pwd`/Skull;g" \
+  -e "s;%SQLITE%;$SDK/$SQLITE;g" \
+  module/module.map.in > module/module.map

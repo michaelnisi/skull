@@ -1,5 +1,5 @@
 module sqlite3 [system] {
-  header "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/usr/include/sqlite3.h"
+  header "%SQLITE%"
   link "sqlite3"
   export *
 }

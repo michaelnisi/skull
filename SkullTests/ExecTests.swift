@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Michael Nisi. All rights reserved.
 //
 
-import UIKit
 import XCTest
 
 enum SQLiteTypeAffinity: String {

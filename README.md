@@ -1,7 +1,7 @@
 
 # Skull - Swift SQLite
 
-Skull is a minimal [SQLite3](https://www.sqlite.org/) API for [Swift](https://developer.apple.com/swift/). Trying to stay out of the way, it is not threadsafe and leaves access serialization to the user. A `Skull` instance caches prepared statements.
+Skull is a tiny Swift module that provides a minimal [SQLite3](https://www.sqlite.org/) API for iOS. To keep it simple Skull is not thread-safe and leaves access serialization to the user (where it belongs). A `Skull` instance caches its compiled SQL statements (prepared statements).
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/skull.svg)](http://travis-ci.org/michaelnisi/skull)
 
@@ -13,11 +13,9 @@ SkullRow()
 A database `row` with subscript access to column values. Supported types are `String`, `Int`, and `Double`. For example:
 
 ```swift
-XCTAssertEqual(row["t"] as String, "500.0")
-XCTAssertEqual(row["nu"] as Int, 500)
-XCTAssertEqual(row["i"] as Int, 500)
-XCTAssertEqual(row["r"] as Double, 500.0)
-XCTAssertEqual(row["no"] as String, "500.0")
+row["a"] as String == "500.0"
+row["b"] as Int == 500
+row["c"] as Double == 500.0
 ```
 
 ```swift
@@ -72,7 +70,7 @@ db.update(sql: String, params: Any?...) -> NSError?
 Updates the database by binding the parameters to an SQL statement, for example:
 ```swift
 let sql = "INSERT INTO t1 VALUES (?,?,?,?,?)"
-XCTAssertNil(db!.update(sql, 500.0, 500.0, 500.0, 500.0, "500.0"))
+let error = db!.update(sql, 500.0, 500.0, 500.0, 500.0, "500.0")
 ```
 
 ### Managing the database connection
@@ -92,12 +90,10 @@ Flushes cache and closes database connection.
 To install do:
 
 ```bash
+$ ./configure
 $ make
 ```
-
-This creates `module/module.map`, builds, and runs the tests.
-
-Then add `Skull.xcodeproj` to your workspace and add `Skull.framework` to a target of the project you want to use it in.
+This generates the private module map `module/module.map` and builds a debug configuration. Accordingly you can add `Skull.xcodeproj` to your workspace and add `Skull.framework` to a target of the project you want to use it in.
 
 ## License
 
