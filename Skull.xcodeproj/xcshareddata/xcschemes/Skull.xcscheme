@@ -28,7 +28,26 @@
       shouldUseLaunchSchemeArgsEnv = "YES"
       buildConfiguration = "Debug">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4C7171CC19F6AB9500C7AB0D"
+               BuildableName = "SkullTests.xctest"
+               BlueprintName = "SkullTests"
+               ReferencedContainer = "container:Skull.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "4C7171C119F6AB9500C7AB0D"
+            BuildableName = "Skull.framework"
+            BlueprintName = "Skull"
+            ReferencedContainer = "container:Skull.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"

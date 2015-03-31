@@ -42,7 +42,7 @@ class ConnectionTests: XCTestCase {
       XCTAssertNil(db!.close())
       if let found = db!.close() {
         let wanted = NSError(
-          domain: "com.michaelnisi.skull"
+          domain: SkullErrorDomain
         , code: 0
         , userInfo: ["message": "not open"]
         )

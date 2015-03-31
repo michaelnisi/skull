@@ -20,7 +20,7 @@ func sqlFrom (bundle: NSBundle, name: String) -> (NSError?, String?) {
     }
   } else {
     er = NSError(
-      domain: domain
+      domain: SkullErrorDomain
     , code: 1
     , userInfo: ["message": "no path"]
     )
