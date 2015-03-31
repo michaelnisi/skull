@@ -10,7 +10,7 @@ import Foundation
 import sqlite3
 import skull_helpers
 
-let domain = "com.michaelnisi.skull"
+public let SkullErrorDomain = "com.michaelnisi.skull"
 
 struct SkullColumn<T>: Printable {
   let name: String
@@ -49,7 +49,7 @@ func ok (code: CInt, ctx: COpaquePointer) -> NSError? {
       msg = "unknown error"
     }
     return NSError(
-      domain: domain
+      domain: SkullErrorDomain
     , code: Int(code)
     , userInfo: ["message": msg]
     )
@@ -81,7 +81,7 @@ public class Skull: Printable {
         return open(filename)
       } else {
         return NSError(
-          domain: domain
+          domain: SkullErrorDomain
         , code: 1
         , userInfo: ["message": "invalid URL"]
         )
@@ -105,7 +105,7 @@ public class Skull: Printable {
     cache.removeAll()
     if errors.count > 0 {
       return NSError(
-        domain: domain
+        domain: SkullErrorDomain
       , code: 0
       , userInfo: ["message": "couldn't finalize all prepared statements"]
       )
@@ -119,7 +119,7 @@ public class Skull: Printable {
     }
     if ctx == nil {
       return NSError(
-        domain: domain
+        domain: SkullErrorDomain
       , code: 0
       , userInfo: ["message": "not open"]
       )
@@ -156,7 +156,7 @@ public class Skull: Printable {
         }
         if errors > 0 {
           er = NSError(
-            domain: domain
+            domain: SkullErrorDomain
           , code: 0
           , userInfo: ["message": "got NULL from CString"]
           )
@@ -297,7 +297,7 @@ public class Skull: Printable {
         }
       } else {
         return NSError(
-          domain: domain
+          domain: SkullErrorDomain
         , code: 1
         , userInfo: ["message": "unsupported type \(param)"]
         )

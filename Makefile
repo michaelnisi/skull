@@ -12,6 +12,10 @@ build:
 	xcodebuild -configuration Debug build
 
 test:
-	xctool test -project $(project) -scheme $(scheme) -sdk $(sdk)
+	xctool test \
+		-project $(project) \
+		-scheme $(scheme) \
+		-sdk $(sdk) \
+		-reporter pretty
 
 .PHONY: all clean test

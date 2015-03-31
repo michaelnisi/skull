@@ -1,9 +1,11 @@
 #!/bin/bash
 
-SDK=$SDKROOT
-if test -z "$SDK"
+if [ -n "$SDKROOT" ]
 then
-  if [ -n "$1" ]; then
+  SDK=$SDKROOT
+else
+  if [ -n "$1" ]
+  then
     SDK=$1
   else
     L=`xcodebuild -showBuildSettings | grep SDKROOT`
@@ -18,3 +20,5 @@ sed \
   -e "s;%SRC%;`pwd`/Skull;g" \
   -e "s;%SQLITE%;$SDK/$SQLITE;g" \
   module/module.map.in > module/module.map
+
+exit 0
