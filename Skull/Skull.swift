@@ -250,7 +250,7 @@ public class Skull: Printable {
         cache[sql] = pStmt
       }
     }
-    return run(pStmt, cb)
+    return run(pStmt, cb: cb)
   }
 
   public func update (sql: String, _ params: Any?...) -> NSError? {
@@ -291,7 +291,7 @@ public class Skull: Printable {
         }
       } else if let value = param as? String {
         let c = value
-        let len = CInt(countElements(value))
+        let len = CInt(count(value))
         if let er = ok(skull_bind_text(pStmt, i, c, len), ctx) {
           return er
         }
@@ -303,6 +303,6 @@ public class Skull: Printable {
         )
       }
     }
-    return run(pStmt, nil)
+    return run(pStmt, cb: nil)
   }
 }

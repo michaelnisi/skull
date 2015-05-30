@@ -14,11 +14,11 @@ else
   fi
 fi
 
-SQLITE="usr/include/sqlite3.h"
+SQLITE="/usr/include/sqlite3.h"
 
 sed \
   -e "s;%SRC%;`pwd`/Skull;g" \
-  -e "s;%SQLITE%;$SDK/$SQLITE;g" \
-  module/module.map.in > module/module.map
+  -e "s;%SQLITE%;$SDK$SQLITE;g" \
+  module/module.modulemap.in > module/module.modulemap
 
 exit 0

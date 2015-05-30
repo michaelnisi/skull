@@ -41,11 +41,11 @@ class QueryTests: XCTestCase {
     let er = db!.query(sql) { er, optrow in
       XCTAssertNil(er)
       if let row = optrow {
-        XCTAssertEqual(row["t"] as String, "500.0")
-        XCTAssertEqual(row["nu"] as Int, 500)
-        XCTAssertEqual(row["i"] as Int, 500)
-        XCTAssertEqual(row["r"] as Double, 500.0)
-        XCTAssertEqual(row["no"] as String, "500.0")
+        XCTAssertEqual(row["t"] as! String, "500.0")
+        XCTAssertEqual(row["nu"] as! Int, 500)
+        XCTAssertEqual(row["i"] as! Int, 500)
+        XCTAssertEqual(row["r"] as! Double, 500.0)
+        XCTAssertEqual(row["no"] as! String, "500.0")
       } else {
         XCTFail("should have row")
       }

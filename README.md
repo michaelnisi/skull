@@ -1,7 +1,6 @@
-
 # Skull - Swift SQLite
 
-Skull is a minimal [SQLite3](https://www.sqlite.org/) extension for Swift. Its current build is configured as an iOS framework. To keep it simple, Skull is not thread-safe and leaves access serialization to the user. A `Skull` instance caches its compiled SQL statements (prepared statements).
+**Skull** is a minimal [SQLite](https://www.sqlite.org/) interface for Swift. Its current build is configured as an iOS framework. To keep it simple, **Skull** is not thread-safe and leaves access serialization to the user. A `Skull` instance caches its compiled SQL statements (prepared statements).
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/skull.svg)](http://travis-ci.org/michaelnisi/skull)
 
@@ -87,7 +86,7 @@ Flushes cache and closes database connection.
 
 ## Install
 
-To configure the [private module map file](http://clang.llvm.org/docs/Modules.html#private-module-map-files) `module/module.map` do:
+To configure the [module map file](http://clang.llvm.org/docs/Modules.html#module-map-file) `module/module.modulemap` do:
 
 ```bash
 $ ./configure

@@ -5,7 +5,6 @@ module sqlite3 [system] {
 }
 
 module skull_helpers {
-  umbrella "%SRC%"
-  header "skull_helpers.h"
+  header "%SRC%/skull_helpers.h"
   export *
 }

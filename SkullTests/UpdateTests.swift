@@ -44,11 +44,11 @@ class UpdateTests: XCTestCase {
       XCTAssertNil(er)
       count++
       if let row = optrow {
-        XCTAssertEqual(row["t"] as String, "500.0")
-        XCTAssertEqual(row["nu"] as Int, 500)
-        XCTAssertEqual(row["i"] as Int, 500)
-        XCTAssertEqual(row["r"] as Double, 500.0)
-        XCTAssertEqual(row["no"] as String, "500.0")
+        XCTAssertEqual(row["t"] as! String, "500.0")
+        XCTAssertEqual(row["nu"] as! Int, 500)
+        XCTAssertEqual(row["i"] as! Int, 500)
+        XCTAssertEqual(row["r"] as! Double, 500.0)
+        XCTAssertEqual(row["no"] as! String, "500.0")
       } else {
         XCTFail("should have row")
       }
@@ -91,12 +91,13 @@ class UpdateTests: XCTestCase {
     }
     XCTAssertNil(db.update("COMMIT;"))
     var count = 0
-    XCTAssertNil(db.query("SELECT * FROM shows") { er, row in
+    let er = db.query("SELECT * FROM shows") { er, row in
       XCTAssertNil(er)
       XCTAssertNotNil(row)
       count++
       return 0
-    })
+    }
+    XCTAssertNil(er)
     XCTAssertEqual(count, 3)
 
     XCTAssertEqual(db.cache.count, 5, "should cache statements")

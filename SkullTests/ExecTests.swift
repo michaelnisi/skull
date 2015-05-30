@@ -42,7 +42,7 @@ class ExecTests: XCTestCase {
     XCTAssertNil(db.exec("select sqlite_version()") { er, row in
       XCTAssertNil(er)
       if let found = row["sqlite_version()"] {
-        XCTAssertEqual(found, "3.8.5")
+        XCTAssertEqual(found, "3.8.5", "should be recommended version")
       } else {
         XCTFail("Should find version")
       }
@@ -50,7 +50,7 @@ class ExecTests: XCTestCase {
     })
   }
   */
-
+  
   func testExec () {
     typealias Row = [String:String]
     func row (t: [SQLiteTypeAffinity]) -> Row {
@@ -77,12 +77,13 @@ class ExecTests: XCTestCase {
     let sql = load()
     var count = 0
     let r = rows()
-    XCTAssertNil(db.exec(sql) { er, found in
+    let er = db.exec(sql) { er, found in
       let wanted = r[count++]
       XCTAssertEqual(found, wanted)
       XCTAssertNil(er)
       return 0
-    })
+    }
+    XCTAssertNil(er)
     XCTAssertNil(db.exec("SELECT * FROM t1"), "should be ok without callback")
     XCTAssertEqual(count, r.count)
   }
@@ -149,7 +150,7 @@ class ExecTests: XCTestCase {
     })
     XCTAssertNil(db.exec(sql) { er, found in
       XCTAssertNil(er)
-      println(found)
+      // println(found)
       return 0
     })
   }

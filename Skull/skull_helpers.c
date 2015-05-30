@@ -28,4 +28,3 @@ int skull_bind_text
 (sqlite3_stmt *pStmt, int index, const char *zName, int length) {
   return sqlite3_bind_text(pStmt, index, zName, length, SQLITE_TRANSIENT);
 }
-
