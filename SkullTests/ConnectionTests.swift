@@ -1,57 +1,76 @@
-//
-//  ConnectionTests.swift
-//  Skull
-//
-//  Created by Michael Nisi on 16.10.14.
-//  Copyright (c) 2014 Michael Nisi. All rights reserved.
-//
-
 import XCTest
 
 class ConnectionTests: XCTestCase {
-  var db: Skull?
+  var db: Skull!
   let filename: String = "affinity.db"
 
   override func setUp () {
     super.setUp()
-    rm(filename) // you never know
+    do {
+      try rm(filename)
+    } catch {
+      XCTAssert(true, "nothing to remove")
+    }
   }
 
   override func tearDown () {
-    db!.close()
-    XCTAssertNil(rm(filename))
-    super.tearDown()
+    do {
+      try db.close()
+      try rm(filename)
+    } catch {
+      XCTAssert(true, "nothing to close or remove")
+    }
+    defer {
+      super.tearDown()
+    }
   }
 
-  func testOpen() {
-    if let url = documents(filename) {
-      db = Skull()
-      XCTAssertNil(db!.open(url: url))
-      XCTAssertNil(db!.open(url: url))
-    } else {
-      XCTFail("invalid db URL")
+  func testOpenURL () {
+    guard let url = documents(filename) else {
+      return XCTAssert(false, "should be valid URL")
     }
-    XCTAssertNil(db!.open())
-    XCTAssertNil(db!.open())
+    db = Skull()
+    let desc = "Skull: closed"
+    XCTAssertEqual(String(db), desc)
+    try! db.open(url)
+    XCTAssertNotEqual(String(db), desc)
+    var thrown = false
+    do {
+      try db.open(url)
+    } catch {
+      thrown = true
+    }
+    XCTAssert(thrown, "should throw")
+  }
+  
+  func testOpenInMemory () {
+    db = Skull()
+    XCTAssertEqual(String(db), "Skull: closed")
+    try! db.open()
+    var thrown = false
+    do {
+      try db.open()
+    } catch {
+      thrown = true
+    }
+    XCTAssert(thrown, "should throw")
   }
 
   func testClose () {
-    if let url = documents(filename) {
-      db = Skull()
-      XCTAssertNil(db!.open(url: url))
-      XCTAssertNil(db!.close())
-      if let found = db!.close() {
-        let wanted = NSError(
-          domain: SkullErrorDomain
-        , code: 0
-        , userInfo: ["message": "not open"]
-        )
-        XCTAssertEqual(found, wanted)
-      } else {
-        XCTFail("should error")
-      }
-    } else {
-      XCTFail("invalid db URL")
+    guard let url = documents(filename) else {
+      return XCTAssert(false, "should be valid URL")
     }
+    db = Skull()
+    var thrown = false
+    do {
+      try db.close()
+    } catch SkullError.NotOpen {
+      thrown = true
+    } catch {
+      XCTFail("should not throw unexpected error")
+    }
+    XCTAssert(thrown, "should throw")
+    try! db.open(url)
+    try! db.close()
   }
 }

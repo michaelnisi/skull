@@ -3,7 +3,7 @@
 //  Skull
 //
 //  Created by Michael Nisi on 12.10.14.
-//  Copyright (c) 2014 Michael Nisi. All rights reserved.
+//  Copyright (c) 2014-2015 Michael Nisi. All rights reserved.
 //
 
 #include "skull_helpers.h"
@@ -17,11 +17,6 @@ static int exec_cb
 int skull_exec
 (sqlite3 *db, const char *sql, int(^cb)(int, char**, char**)) {
   return sqlite3_exec(db, sql, cb ? exec_cb : NULL, cb, NULL);
-}
-
-int skull_prepare
-(sqlite3 *db, const char *sql, sqlite3_stmt **handle) {
-  return sqlite3_prepare_v2(db, sql, -1, handle, NULL);
 }
 
 int skull_bind_text

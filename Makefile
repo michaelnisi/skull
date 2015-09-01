@@ -1,4 +1,3 @@
-
 project=Skull.xcodeproj
 scheme=Skull
 sdk=iphonesimulator

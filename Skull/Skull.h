@@ -3,7 +3,7 @@
 //  Skull
 //
 //  Created by Michael Nisi on 21.10.14.
-//  Copyright (c) 2014 Michael Nisi. All rights reserved.
+//  Copyright (c) 2014-2015 Michael Nisi. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

@@ -1,11 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-if [ -n "$SDKROOT" ]
-then
+if [ -n "$SDKROOT" ]; then
   SDK=$SDKROOT
 else
-  if [ -n "$1" ]
-  then
+  if [ -n "$1" ]; then
     SDK=$1
   else
     L=`xcodebuild -showBuildSettings | grep SDKROOT`

@@ -1,53 +1,24 @@
-//
-//  common.swift
-//  Skull
-//
-//  Created by Michael Nisi on 14.10.14.
-//  Copyright (c) 2014 Michael Nisi. All rights reserved.
-//
+// common - common functions used by tests
 
 import Foundation
 
-func sqlFrom (bundle: NSBundle, name: String) -> (NSError?, String?) {
-  var er: NSError?
-  if let path = bundle.pathForResource(name, ofType: "sql") {
-    if let sql = String(
-      contentsOfFile: path
-    , encoding: NSUTF8StringEncoding
-    , error: &er
-    ) {
-      return (er, sql)
-    }
-  } else {
-    er = NSError(
-      domain: SkullErrorDomain
-    , code: 1
-    , userInfo: ["message": "no path"]
-    )
+func sqlFromBundle (bundle: NSBundle, withName name: String) throws -> String? {
+  guard let path = bundle.pathForResource(name, ofType: "sql") else {
+    throw SkullError.NoPath
   }
-  return (er, nil)
+  return try String(contentsOfFile: path, encoding: NSUTF8StringEncoding)
 }
 
 func documents (string: String) -> NSURL? {
-  if let paths = NSSearchPathForDirectoriesInDomains(
-    .DocumentDirectory
-  , .UserDomainMask
-  , true
-  ) {
-    if let path = paths[0] as? String {
-      return NSURL(
-        string: string
-      , relativeToURL: NSURL(fileURLWithPath: path)
-      )
-    }
+  let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
+  guard let path: String = paths[0] else {
+    return nil
   }
-  return nil
+  return NSURL(string: string, relativeToURL: NSURL(fileURLWithPath: path))
 }
 
-func rm (filename: String) -> NSError? {
-  var er: NSError? = nil
+func rm (filename: String) throws {
   let url = documents(filename)
   let fm = NSFileManager.defaultManager()
-  fm.removeItemAtURL(url!, error: &er)
-  return er
+  try fm.removeItemAtURL(url!)
 }

@@ -3,16 +3,14 @@
 //  Skull
 //
 //  Created by Michael Nisi on 12.10.14.
-//  Copyright (c) 2014 Michael Nisi. All rights reserved.
+//  Copyright (c) 2014-2015 Michael Nisi. All rights reserved.
 //
 
 import Foundation
 import sqlite3
 import skull_helpers
 
-public let SkullErrorDomain = "com.michaelnisi.skull"
-
-struct SkullColumn<T>: Printable {
+struct SkullColumn<T>: CustomStringConvertible {
   let name: String
   let value: T
 
@@ -21,7 +19,7 @@ struct SkullColumn<T>: Printable {
   }
 }
 
-public class SkullRow: Printable {
+public class SkullRow: CustomStringConvertible {
   private var cols = [String:SkullColumn<AnyObject>]()
 
   public subscript (key: String) -> AnyObject? {
@@ -37,109 +35,128 @@ public class SkullRow: Printable {
   }
 }
 
-func ok (code: CInt, ctx: COpaquePointer) -> NSError? {
-  if code == SQLITE_OK {
-    return nil
-  } else {
-    var msg: String
-    let cs = sqlite3_errmsg(ctx)
-    if let s = String.fromCString(cs) { // handles NULL
-      msg = s
-    } else {
-      msg = "unknown error"
+let ERROR_DESCRIPTIONS = [
+  "Already open",
+  "failed to finalize",
+  "invalid url",
+  "null from C string",
+  "no path",
+  "not open",
+  "sqlite error",
+  "unsupported type"
+]
+
+// TODO: Review these error types
+public enum SkullError: ErrorType, CustomStringConvertible {
+  case AlreadyOpen(String)
+  case FailedToFinalize(Array<ErrorType>)
+  case InvalidURL
+  case NULLFromCString
+  case NoPath
+  case NotOpen
+  case SQLiteError(Int, String)
+  case UnsupportedType
+
+  public var description: String {
+    switch self {
+    case .SQLiteError(let code, let msg):
+      return "SQLiteError code: \(code) message: \(msg)"
+    default:
+      return ERROR_DESCRIPTIONS[self._code]
     }
-    return NSError(
-      domain: SkullErrorDomain
-    , code: Int(code)
-    , userInfo: ["message": msg]
-    )
   }
 }
 
-public class Skull: Printable {
+func ok (code: CInt, _ ctx: COpaquePointer) throws {
+  if code != SQLITE_OK {
+    func msg () -> String {
+      let cs = sqlite3_errmsg(ctx)
+      guard let msg = String.fromCString(cs) else {
+        return "unkown error"
+      }
+      return msg
+    }
+    throw SkullError.SQLiteError(Int(code), msg())
+  }
+}
+
+public class Skull: CustomStringConvertible {
   var ctx: COpaquePointer
-  var urls: [NSURL]
   var cache: [String:COpaquePointer]
 
   public init () {
     ctx = nil
-    urls = [NSURL]()
     cache = [String:COpaquePointer]()
   }
 
-  public var description: String {
-    return "Skull: \(urls)"
+  private var filename: String? {
+    guard ctx != nil else {
+      return nil
+    }
+    let ptr: UnsafePointer<CChar> = sqlite3_db_filename(ctx, "main")
+    return String.fromCString(ptr)
   }
 
-  public func open () -> NSError? {
-    return open(url: nil)
+  public var description: String {
+    let str = filename ?? "closed"
+    return "Skull: \(str)"
   }
-  public func open (url opturl: NSURL?) -> NSError? {
-    if let url = opturl {
-      if let filename = url.path {
-        urls.append(url)
-        return open(filename)
-      } else {
-        return NSError(
-          domain: SkullErrorDomain
-        , code: 1
-        , userInfo: ["message": "invalid URL"]
-        )
-      }
-    } else {
-      return open(":memory:")
+  
+  func checkIfOpen () throws {
+    if let f = self.filename {
+      throw SkullError.AlreadyOpen(f)
     }
   }
-  func open (filename: String) -> NSError? {
-    let flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE
-    return ok(sqlite3_open_v2(filename, &ctx, flags, nil), ctx)
+
+  public func open () throws {
+    try checkIfOpen()
+    try open(":memory:")
   }
 
-  public func flush () -> NSError? {
-    var errors = [NSError]()
-    for (sql, pStmt) in cache {
-      if let er = ok(sqlite3_finalize(pStmt), ctx) {
+  public func open (url: NSURL) throws {
+    try checkIfOpen()
+    guard let filename = url.path else {
+      throw SkullError.InvalidURL
+    }
+    try open(filename)
+  }
+
+  func open (filename: String) throws {
+    let flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE
+    try ok(sqlite3_open_v2(filename, &ctx, flags, nil), ctx)
+  }
+
+  public func flush () throws {
+    var errors = [ErrorType]()
+    for (_, pStmt) in cache {
+      do {
+        try ok(sqlite3_finalize(pStmt), ctx)
+      } catch let er {
         errors.append(er)
       }
     }
-    cache.removeAll()
     if errors.count > 0 {
-      return NSError(
-        domain: SkullErrorDomain
-      , code: 0
-      , userInfo: ["message": "couldn't finalize all prepared statements"]
-      )
+      throw SkullError.FailedToFinalize(errors)
     }
-    return nil
+    cache.removeAll()
   }
 
-  public func close () -> NSError? {
-    if let er = flush() {
-      return er
-    }
+  public func close () throws {
+    try flush()
     if ctx == nil {
-      return NSError(
-        domain: SkullErrorDomain
-      , code: 0
-      , userInfo: ["message": "not open"]
-      )
+      throw SkullError.NotOpen
     }
-    if let er = ok(sqlite3_close(ctx), ctx) { // accepts nil
-      return er
-    }
+    try ok(sqlite3_close(ctx), ctx)
     ctx = nil
-    return nil
   }
 
-  public func exec
-  (sql: String, cb ocb: ((NSError?, [String:String]) -> Int)? = nil)
-  -> NSError? {
+  public func exec (sql: String, cb ocb: ((SkullError?, [String:String]) -> Int)? = nil) throws {
     typealias CArr = UnsafeMutablePointer<UnsafeMutablePointer<Int8>>
     typealias Callback = (CInt, CArr, CArr) -> CInt
     var f: Callback? = nil
     if let cb = ocb {
       f = { cols, texts, names in
-        var er: NSError?
+        var er: SkullError?
         var errors = 0
         var dict = [String:String]()
         let count = Int(cols)
@@ -155,16 +172,12 @@ public class Skull: Printable {
           }
         }
         if errors > 0 {
-          er = NSError(
-            domain: SkullErrorDomain
-          , code: 0
-          , userInfo: ["message": "got NULL from CString"]
-          )
+          er = SkullError.NULLFromCString
         }
         return CInt(cb(er, dict))
       }
     }
-    return ok(skull_exec(ctx, sql, f), ctx)
+    try ok(skull_exec(ctx, sql, f), ctx)
   }
 
   func column (pStmt: COpaquePointer, _ i: Int) -> SkullColumn<AnyObject>? {
@@ -189,29 +202,27 @@ public class Skull: Printable {
     }
     return nil
   }
-  func textColumn (pStmt: COpaquePointer, index: CInt, name: String)
-  -> SkullColumn<AnyObject>? {
+
+  func textColumn (pStmt: COpaquePointer, index: CInt, name: String) -> SkullColumn<AnyObject>? {
     let ptr: UnsafePointer<UInt8> = sqlite3_column_text(pStmt, index)
-    var cs = UnsafePointer<CChar>(ptr)
+    let cs = UnsafePointer<CChar>(ptr)
     if let s = String.fromCString(cs) {
       return SkullColumn(name: name, value: s)
     }
     return nil
   }
-  func intColumn (pStmt: COpaquePointer, index: CInt, name: String)
-  -> SkullColumn<AnyObject>? {
+
+  func intColumn (pStmt: COpaquePointer, index: CInt, name: String) -> SkullColumn<AnyObject>? {
     let value = Int(sqlite3_column_int(pStmt, index))
     return SkullColumn(name: name, value: value)
   }
-  func doubleColumn (pStmt: COpaquePointer, index: CInt, name: String)
-  -> SkullColumn<AnyObject>? {
+
+  func doubleColumn (pStmt: COpaquePointer, index: CInt, name: String) -> SkullColumn<AnyObject>? {
     let value: Double = sqlite3_column_double(pStmt, index)
     return SkullColumn(name: name, value: value)
   }
 
-  func run
-  (pStmt: COpaquePointer, cb optcb: ((NSError?, SkullRow?) -> Int)? = nil)
-  -> NSError? {
+  func run (pStmt: COpaquePointer, cb optcb: ((SkullError?, SkullRow?) -> Int)? = nil) throws {
     var code: CInt
     while true {
       code = sqlite3_step(pStmt) // cling together, swing together
@@ -230,79 +241,60 @@ public class Skull: Printable {
         break
       } else {
         if let cb = optcb  {
-          cb(ok(code, ctx), nil)
+          do {
+            try ok(code, ctx)
+          } catch let er as SkullError {
+            cb(er, nil)
+          }
+          cb(nil, nil)
         }
         break
       }
     }
-    return ok(sqlite3_reset(pStmt), ctx)
+    try ok(sqlite3_reset(pStmt), ctx)
   }
 
-  public func query (sql: String, cb: (NSError?, SkullRow?) -> Int)
-  -> NSError? {
+  public func query (sql: String, cb: (SkullError?, SkullRow?) -> Int) throws {
     var pStmt: COpaquePointer = nil
     if let cachedPStmt = cache[sql] {
       pStmt = cachedPStmt
     } else {
-      if let er = ok(skull_prepare(ctx, sql, &pStmt), ctx) {
-        return er
-      } else {
-        cache[sql] = pStmt
-      }
+      try ok(sqlite3_prepare_v2(ctx, sql, -1, &pStmt, nil), ctx)
+      cache[sql] = pStmt
     }
-    return run(pStmt, cb: cb)
+    try run(pStmt, cb: cb)
   }
 
-  public func update (sql: String, _ params: Any?...) -> NSError? {
+  public func update (sql: String, _ params: Any?...) throws {
     var pStmt: COpaquePointer = nil
     if let cachedPStmt = cache[sql] {
       pStmt = cachedPStmt // has bindings
-      if let er = ok(sqlite3_clear_bindings(pStmt), ctx) {
-        return er
-      }
+      try ok(sqlite3_clear_bindings(pStmt), ctx)
     } else {
-      if let er = ok(skull_prepare(ctx, sql, &pStmt), ctx) {
-        return er
-      } else {
-        cache[sql] = pStmt
-      }
+      try ok(sqlite3_prepare_v2(ctx, sql, -1, &pStmt, nil), ctx)
+      cache[sql] = pStmt
     }
     var i: CInt = 0
-    for (index, param) in enumerate(params) {
+    for (index, param) in params.enumerate() {
       i = CInt(index + 1)
       if param == nil {
-        if let er = ok(sqlite3_bind_null(pStmt, i), ctx) {
-          return er
-        }
+        try ok(sqlite3_bind_null(pStmt, i), ctx)
       } else if let value = param as? Int {
         let c = CInt(value)
-        if let er = ok(sqlite3_bind_int(pStmt, i, c), ctx) {
-          return er
-        }
+        try ok(sqlite3_bind_int(pStmt, i, c), ctx)
       } else if let value = param as? Float {
         let c = CDouble(value)
-        if let er = ok(sqlite3_bind_double(pStmt, i, c), ctx) {
-          return er
-        }
+        try ok(sqlite3_bind_double(pStmt, i, c), ctx)
       } else if let value = param as? Double {
         let c = CDouble(value)
-        if let er = ok(sqlite3_bind_double(pStmt, i, c), ctx) {
-          return er
-        }
+        try ok(sqlite3_bind_double(pStmt, i, c), ctx)
       } else if let value = param as? String {
-        let c = value
-        let len = CInt(count(value))
-        if let er = ok(skull_bind_text(pStmt, i, c, len), ctx) {
-          return er
-        }
+        let len = CInt(value.characters.count)
+        try ok(skull_bind_text(pStmt, i, value, len), ctx)
       } else {
-        return NSError(
-          domain: SkullErrorDomain
-        , code: 1
-        , userInfo: ["message": "unsupported type \(param)"]
-        )
+        throw SkullError.UnsupportedType
       }
     }
-    return run(pStmt, cb: nil)
+    try run(pStmt, cb: nil)
   }
 }

@@ -7,6 +7,20 @@
 ## types
 
 ```swift
+SkullError
+```
+The possible errors.
+
+- `AlreadyOpen(String)`
+- `FailedToFinalize(Array<ErrorType>)`
+- `InvalidURL`
+- `NULLFromCString`
+- `NoPath`
+- `NotOpen`
+- `SQLiteError(Int, String)`
+- `UnsupportedType`
+
+```swift
 SkullRow()
 ```
 A database `row` with subscript access to column values. Supported types are `String`, `Int`, and `Double`. For example:
@@ -31,21 +45,21 @@ let db = Skull()
 ### Opening a database connection
 
 ```swift
-db.open() -> NSError?
+Void db.open() throws
 ```
-Opens a connection to an in-memory database.
+Opens an in-memory database.
 
 ```swift
-db.openURL(url: NSURL?) -> NSError?
+Void open (url: NSURL) throws
 ```
-- url The location of the database file to open.
+- url The location of the database file to open
 
-Opens a connection to a database in the file located at the provided `NSURL`. If the file does not exist, it is created. Passing `nil` means `db.open()`.
+Opens the database located at the provided `NSURL`. If the file does not exist, it is created. Passing `nil` means `db.open()`.
 
 ### Accessing the database
 
 ```swift
-db.exec(sql: String, cb: ((NSError?, [String:String]) -> Int)?)) -> NSError?
+Void db.exec(sql: String, cb: ((SkullError?, [String:String]) -> Int)?)) throws
 ```
 - `sql` The SQL statement to execute.
 - `cb` An optional callback to handle results.
@@ -53,7 +67,7 @@ db.exec(sql: String, cb: ((NSError?, [String:String]) -> Int)?)) -> NSError?
 Executes SQL statement and applies the callback for each result. The callback is optional. If a callback is provided, it can abort execution by returning something else than `0`.
 
 ```swift
-db.query(sql: String, cb: (NSError?, SkullRow?) -> Int) -> NSError?
+Void db.query(sql: String, cb: (SkullError?, SkullRow?) -> Int) throws
 ```
 - `sql` The SQL statement to apply.
 - `cb` The callback to handle results.
@@ -61,7 +75,7 @@ db.query(sql: String, cb: (NSError?, SkullRow?) -> Int) -> NSError?
 Queries the database with the SQL statement and apply the callback for each resulting row.
 
 ```swift
-db.update(sql: String, params: Any?...) -> NSError?
+Void db.update(sql: String, params: Any?...) throws
 ```
 - `sql` The SQL statement to apply.
 - `params` The parameters to bind to the statement.
@@ -75,12 +89,12 @@ let error = db!.update(sql, 500.0, 500.0, 500.0, 500.0, "500.0")
 ### Managing the database connection
 
 ```swift
-db.flush() -> NSError?
+Void db.flush() throws
 ```
 Removes and finalizes all cached prepared statements.
 
 ```swift
-db.close() -> NSError?
+Void db.close() throws
 ```
 Flushes cache and closes database connection.
 
