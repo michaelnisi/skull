@@ -6,10 +6,9 @@
 
 ## Types
 
-```swift
-SkullError
-```
-The possible errors:
+### SkullError
+
+`SkullError` enumerates explicit error types of the Skull module.
 
 - `AlreadyOpen(String)`
 - `FailedToFinalize(Array<ErrorType>)`
@@ -20,10 +19,9 @@ The possible errors:
 - `SQLiteError(Int, String)`
 - `UnsupportedType`
 
-```swift
-SkullRow
-```
-A database `row` with subscript access to column values. Supported types are `String`, `Int`, and `Double`. For example:
+### SkullRow
+
+`SkullRow` models a database `row` with subscript access to column values. Supported types are `String`, `Int`, and `Double`. For example:
 
 ```swift
 row["a"] as String == "500.0"
@@ -31,26 +29,30 @@ row["b"] as Int == 500
 row["c"] as Double == 500.0
 ```
 
+### Skull
+
+`Skull`, the main object of this module, represents a SQLite database connection.
+
 ## Exports
 
 ### Opening a database connection
 
-```swift
-Skull() throws
-```
-Opens an in-memory database.
+To open a database connection you initialize a new `Skull` object.
 
 ```swift
-Skull(url: NSURL) throws
+init(_ url: NSURL? = nil) throws
 ```
+
 - url The location of the database file to open
 
-Opens the database located at file `url`. If the file does not exist, it is created. Passing `nil` means `Skull()`.
+Opens the database located at file `url`. If the file does not exist, it is created. Skipping `url` or passing `nil` opens an in-memory database.
 
 ### Accessing the database
 
+A `Skull` object, representing a database connection, offers following methods for accessing the database.
+
 ```swift
-Void db.exec(sql: String, cb: ((SkullError?, [String:String]) -> Int)?)) throws
+func exec(sql: String, cb: ((SkullError?, [String:String]) -> Int)?)) throws
 ```
 
 - `sql` The SQL statement to execute.
@@ -59,7 +61,7 @@ Void db.exec(sql: String, cb: ((SkullError?, [String:String]) -> Int)?)) throws
 Executes SQL statement and applies the callback for each result. The callback is optional. If a callback is provided, it can abort execution by not returning `0`.
 
 ```swift
-Void db.query(sql: String, cb: (SkullError?, SkullRow?) -> Int) throws
+func query(sql: String, cb: (SkullError?, SkullRow?) -> Int) throws
 ```
 
 - `sql` The SQL statement to apply.
@@ -68,7 +70,7 @@ Void db.query(sql: String, cb: (SkullError?, SkullRow?) -> Int) throws
 Queries the database with the SQL statement and apply the callback for each resulting row.
 
 ```swift
-Void db.update(sql: String, params: Any?...) throws
+func update(sql: String, params: Any?...) throws
 ```
 
 - `sql` The SQL statement to apply.
@@ -84,14 +86,12 @@ let error = db!.update(sql, 500.0, 500.0, 500.0, 500.0, "500.0")
 ### Managing the database connection
 
 ```swift
-Void db.flush() throws
+func flush() throws
 ```
+
 Removes and finalizes all cached prepared statements.
 
-```swift
-Void db.close() throws
-```
-Flushes cache and closes database connection.
+*The database connection is closed when the `Skull` object is deinitialized.*
 
 ## Install
 
