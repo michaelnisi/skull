@@ -1,64 +1,57 @@
+//
+//  UpdateTests.swift
+//  Skull
+//
+//  Created by Michael Nisi on 22/06/16.
+//  Copyright © 2016 Michael Nisi. All rights reserved.
+//
+
 import XCTest
 
-class UpdateTests: XCTestCase {
-  var db: Skull!
-  
-  func load () throws -> String? {
-    let bundle = NSBundle(forClass: self.dynamicType)
-    return try sqlFromBundle(bundle, withName: "some")
-  }
+class UpdateTests: SkullTestCase {
 
-  override func setUp () {
+  override func setUp() {
+    filename = "some"
     super.setUp()
-    db = Skull()
-    try! db.open()
-    let sql = try! load()
-    try! db.exec(sql!) { er, found in
-      if er != nil {
-        XCTFail("should not error")
-      }
+    
+    var count = 0
+    try! db.query("SELECT * FROM t1;") { error, row in
+      XCTAssertNil(error)
+      XCTAssertNotNil(row)
+      count += 1
       return 0
     }
+    XCTAssertEqual(count, 1)
   }
-
-  override func tearDown () {
-    do {
-      try db.close()
-    } catch SkullError.NotOpen {
-    } catch {
-      XCTFail("should not throw unexpected error")
-    }
-    defer {
-      super.tearDown()
-    }
-  }
-
-  func testUpdate () {
-    let sql = "INSERT INTO t1 VALUES (?,?,?,?,?)"
+  
+  func testUpdate() {
+    let sql = "INSERT INTO t1 VALUES (?,?,?,?,?);"
     try! db.update(sql, 500.0, 500.0, 500.0, 500.0, "500.0")
     try! db.update(sql, "500.0", 500, 500, 500.0, "500.0")
     var count = 0
-    try! db.query("SELECT * FROM t1") { er, optrow in
-      if er != nil {
-        XCTFail("should not error")
-      }
-      count++
-      if let row = optrow {
-        XCTAssertEqual(row["t"] as? String, "500.0")
-        XCTAssertEqual(row["nu"] as? Int, 500)
-        XCTAssertEqual(row["i"] as? Int, 500)
-        XCTAssertEqual(row["r"] as? Double, 500.0)
-        XCTAssertEqual(row["no"] as? String, "500.0")
-      } else {
+    try! db.query("SELECT * FROM t1;") { error, row in
+      XCTAssertNil(error)
+
+      guard let r = row else {
         XCTFail("should have row")
+        return -1
       }
+      
+      XCTAssertEqual(r["t"] as? String, "500.0")
+      XCTAssertEqual(r["nu"] as? Int, 500)
+      XCTAssertEqual(r["i"] as? Int, 500)
+      XCTAssertEqual(r["r"] as? Double, 500.0)
+      XCTAssertEqual(r["no"] as? String, "500.0")
+      
+      count += 1
+  
       return 0
     }
     XCTAssertEqual(count, 3)
   }
 
-  func testUpdateFail () {
-    try! db.update("DELETE FROM t1")
+  func testUpdateFail() {
+    try! db.update("DELETE FROM t1;")
     do {
       try db.update("INSERT INTO t1 VALUES (?,?,?,?,?")
     } catch SkullError.SQLiteError(let code, let msg) {
@@ -67,15 +60,13 @@ class UpdateTests: XCTestCase {
     } catch {
       XCTFail("should not throw unexpected error")
     }
-    try! db.update("INSERT INTO t1 VALUES (?,?,?,?,?)")
+    try! db.update("INSERT INTO t1 VALUES (?,?,?,?,?);")
     var count = 0
-    try! db.query("SELECT * FROM t1") { er, optrow in
-      if er != nil {
-        XCTFail("should not error")
-      }
+    try! db.query("SELECT * FROM t1;") { er, optrow in
+      XCTAssertNil(er)
       if let row = optrow {
-        count++
-        for column: String in ["t", "nu", "i", "r", "no"] {
+        count += 1
+        for column in ["t", "nu", "i", "r", "no"] {
           XCTAssertNil(row[column])
         }
       } else {
@@ -86,28 +77,26 @@ class UpdateTests: XCTestCase {
     XCTAssertEqual(count, 1, "should be one empty row, because we don't validate")
   }
 
-  func testTransaction () {
+  func testTransaction() {
     try! db.update("BEGIN IMMEDIATE;")
     try! db.update("CREATE TABLE shows(id INTEGER PRIMARY KEY, title TEXT);")
     let shows = ["Fargo", "Game Of Thrones", "The Walking Dead"]
     for show: String in shows {
-      try! db.update("INSERT INTO shows(id, title) VALUES(?, ?);", nil, show)
+      try! db.update("INSERT INTO shows(id, title) VALUES (?,?);", nil, show)
     }
     try! db.update("COMMIT;")
-    func selectShows () {
+    func selectShows() {
       var count = 0
-      try! db.query("SELECT * FROM shows") { er, row in
-        if er != nil {
-          XCTFail("should not error")
-        }
+      try! db.query("SELECT * FROM shows;") { er, row in
+        XCTAssertNil(er)
         XCTAssertNotNil(row)
-        count++
+        count += 1
         return 0
       }
       XCTAssertEqual(count, 3)
     }
     selectShows()
-    XCTAssertEqual(db.cache.count, 5, "should cache statements")
+    XCTAssertEqual(db.cache.count, 6, "should cache statements")
     selectShows()
     try! db.close()
     XCTAssert(db.cache.isEmpty, "should purge statements")

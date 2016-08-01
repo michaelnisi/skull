@@ -1,15 +1,15 @@
 # Skull - Swift SQLite
 
-**Skull** is a minimal [SQLite](https://www.sqlite.org/) interface for Swift. Its current build is configured as an iOS framework. To keep it simple, **Skull** is not thread-safe and leaves access serialization to the user. A `Skull` instance caches its compiled SQL statements (prepared statements).
+**Skull** is a bare-bones-interface for using [SQLite](https://www.sqlite.org/) from Swift. To keep it simple, **Skull** is not thread-safe and leaves access serialization to the user. **Skull** objects cache prepared statements.
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/skull.svg)](http://travis-ci.org/michaelnisi/skull)
 
-## types
+## Types
 
 ```swift
 SkullError
 ```
-The possible errors.
+The possible errors:
 
 - `AlreadyOpen(String)`
 - `FailedToFinalize(Array<ErrorType>)`
@@ -21,7 +21,7 @@ The possible errors.
 - `UnsupportedType`
 
 ```swift
-SkullRow()
+SkullRow
 ```
 A database `row` with subscript access to column values. Supported types are `String`, `Int`, and `Double`. For example:
 
@@ -31,44 +31,37 @@ row["b"] as Int == 500
 row["c"] as Double == 500.0
 ```
 
-```swift
-Skull()
-```
-Initializes a Skull instance. For example:
-
-```swift
-let db = Skull()
-```
-
-## exports
+## Exports
 
 ### Opening a database connection
 
 ```swift
-Void db.open() throws
+Skull() throws
 ```
 Opens an in-memory database.
 
 ```swift
-Void open (url: NSURL) throws
+Skull(url: NSURL) throws
 ```
 - url The location of the database file to open
 
-Opens the database located at the provided `NSURL`. If the file does not exist, it is created. Passing `nil` means `db.open()`.
+Opens the database located at file `url`. If the file does not exist, it is created. Passing `nil` means `Skull()`.
 
 ### Accessing the database
 
 ```swift
 Void db.exec(sql: String, cb: ((SkullError?, [String:String]) -> Int)?)) throws
 ```
+
 - `sql` The SQL statement to execute.
 - `cb` An optional callback to handle results.
 
-Executes SQL statement and applies the callback for each result. The callback is optional. If a callback is provided, it can abort execution by returning something else than `0`.
+Executes SQL statement and applies the callback for each result. The callback is optional. If a callback is provided, it can abort execution by not returning `0`.
 
 ```swift
 Void db.query(sql: String, cb: (SkullError?, SkullRow?) -> Int) throws
 ```
+
 - `sql` The SQL statement to apply.
 - `cb` The callback to handle results.
 
@@ -77,10 +70,12 @@ Queries the database with the SQL statement and apply the callback for each resu
 ```swift
 Void db.update(sql: String, params: Any?...) throws
 ```
+
 - `sql` The SQL statement to apply.
 - `params` The parameters to bind to the statement.
 
 Updates the database by binding the parameters to an SQL statement, for example:
+
 ```swift
 let sql = "INSERT INTO t1 VALUES (?,?,?,?,?)"
 let error = db!.update(sql, 500.0, 500.0, 500.0, 500.0, "500.0")
@@ -100,12 +95,21 @@ Flushes cache and closes database connection.
 
 ## Install
 
-To configure the [module map file](http://clang.llvm.org/docs/Modules.html#module-map-file) `module/module.modulemap` do:
+*For now I only support a Cocoa Touch framework target.*
+
+Generate module map files for multiple platforms—iphoneos and iphonesimulator for now:
 
 ```bash
 $ ./configure
 ```
-And add `Skull.xcodeproj` to your workspace to link with `Skull.framework` in your targets.
+
+Run the tests with:
+
+```bash
+$ make test
+```
+
+If test succeeds you can add `Skull.xcodeproj` to your workspace to link with `Skull.framework` in your targets.
 
 ## License
 

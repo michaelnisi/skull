@@ -1,22 +1,33 @@
 #!/usr/bin/env bash
 
-if [ -n "$SDKROOT" ]; then
-  SDK=$SDKROOT
-else
-  if [ -n "$1" ]; then
-    SDK=$1
-  else
-    L=`xcodebuild -showBuildSettings | grep SDKROOT`
-    ARR=($L)
-    SDK=${ARR[2]}
-  fi
-fi
+set -o xtrace
 
-SQLITE="/usr/include/sqlite3.h"
+sdk() {
+  local l=`xcodebuild -showBuildSettings | grep $1`
+  local arr=($l)
+  echo ${arr[2]}
+}
 
-sed \
-  -e "s;%SRC%;`pwd`/Skull;g" \
-  -e "s;%SQLITE%;$SDK$SQLITE;g" \
-  module/module.modulemap.in > module/module.modulemap
+write() {
+  local sdk=$1
+  local header="/usr/include/sqlite3.h"
+  local out=$2
+  sed \
+    -e "s;@@SRC@@;`pwd`/Skull;g" \
+    -e "s;@@SQLITE@@;$sdk$header;g" \
+    module/module.modulemap.in > $out
+}
+
+modulemap() {
+  local dir=$1
+  local name=$2
+  mkdir -p $dir
+  local sdk=$(sdk $name)
+  write $sdk "$dir/module.modulemap"
+}
+
+modulemap "module/iphoneos" "SDKROOT"
+modulemap "module/iphonesimulator" "CORRESPONDING_SIMULATOR_SDK_DIR"
+modulemap "module/macosx" "DEVELOPER_SDK_DIR"
 
 exit 0

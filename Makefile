@@ -8,13 +8,9 @@ clean:
 	-rm -rf build
 
 build:
-	xcodebuild -configuration Debug build
+	xcodebuild build -configuration Debug
 
 test:
-	xctool test \
-		-project $(project) \
-		-scheme $(scheme) \
-		-sdk $(sdk) \
-		-reporter pretty
+	xcodebuild test -configuration Debug -scheme Skull -sdk iphonesimulator9.3
 
 .PHONY: all clean test

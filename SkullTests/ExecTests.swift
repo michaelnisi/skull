@@ -1,3 +1,11 @@
+//
+//  ExecTests.swift
+//  Skull
+//
+//  Created by Michael Nisi on 22/06/16.
+//  Copyright © 2016 Michael Nisi. All rights reserved.
+//
+
 import XCTest
 
 enum SQLiteTypeAffinity: String {
@@ -11,26 +19,30 @@ enum SQLiteTypeAffinity: String {
 class ExecTests: XCTestCase {
   var db: Skull!
   
-  override func setUp () {
+  override func setUp() {
     super.setUp()
-    db = Skull()
-    try! db.open()
+    db = try! Skull()
   }
   
-  override func tearDown () {
-    try! db.close()
+  override func tearDown() {
+    do {
+      try db.close()
+    } catch SkullError.NotOpen {
+    } catch {
+      XCTFail("should not throw unexpected error")
+    }
     defer {
       super.tearDown()
     }
   }
   
-  func load () throws -> String? {
+  func load() throws -> String? {
     let bundle = NSBundle(forClass: self.dynamicType)
     return try sqlFromBundle(bundle, withName: "affinity")
   }
   
-  func testVersion () {
-    try! db.exec("select sqlite_version()") { er, row in
+  func testVersion() {
+    try! db.exec("SELECT sqlite_version();") { er, row in
       if er != nil {
         XCTFail("should not error")
       }
@@ -44,9 +56,9 @@ class ExecTests: XCTestCase {
     }
   }
   
-  func testExec () {
+  func testExec() {
     typealias Row = [String:String]
-    func row (t: [SQLiteTypeAffinity]) -> Row {
+    func row(t: [SQLiteTypeAffinity]) -> Row {
       let names = ["t", "nu", "i", "r", "no"]
       var row = [String:String]()
       for (i, type) in t.enumerate() {
@@ -75,15 +87,16 @@ class ExecTests: XCTestCase {
       if er != nil {
         XCTFail("should not error")
       }
-      let wanted = r[count++]
+      let wanted = r[count]
+      count += 1
       XCTAssertEqual(found, wanted)
       return 0
     }
-    try! db.exec("SELECT * FROM t1")
+    try! db.exec("SELECT * FROM t1;")
     XCTAssertEqual(count, r.count)
   }
   
-  func testPragmas () {
+  func testPragmas() {
     let pragmas = [
       "application_id",
       "auto_vacuum",
@@ -149,7 +162,7 @@ class ExecTests: XCTestCase {
     }
   }
   
-  func testExecAbort () {
+  func testExecAbort() {
     let sql = try! load()
     var count = 0
     var thrown = false
@@ -158,7 +171,7 @@ class ExecTests: XCTestCase {
         if er != nil {
           XCTFail("should not error")
         }
-        count++
+        count += 1
         return 1
       }
     } catch SkullError.SQLiteError(let code, let msg) {

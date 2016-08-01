@@ -3,40 +3,20 @@
 //  Skull
 //
 //  Created by Michael Nisi on 12.10.14.
-//  Copyright (c) 2014-2015 Michael Nisi. All rights reserved.
+//  Copyright (c) 2014-2016 Michael Nisi. All rights reserved.
 //
 
 import Foundation
 import sqlite3
 import skull_helpers
 
-struct SkullColumn<T>: CustomStringConvertible {
-  let name: String
-  let value: T
+// MARK: API
 
-  var description: String {
-    return "SkullColumn: \(name), \(value)"
-  }
-}
+/// A row within a SQLite table.
+public typealias SkullRow = Dictionary<String, AnyObject>
 
-public class SkullRow: CustomStringConvertible {
-  private var cols = [String:SkullColumn<AnyObject>]()
-
-  public subscript (key: String) -> AnyObject? {
-    return cols[key]?.value
-  }
-
-  func append (col: SkullColumn<AnyObject>) -> Void {
-    cols[col.name] = col
-  }
-
-  public var description: String {
-    return "SkullRow: \(cols)"
-  }
-}
-
-let ERROR_DESCRIPTIONS = [
-  "Already open",
+private let errors = [
+  "already open",
   "failed to finalize",
   "invalid url",
   "null from C string",
@@ -46,8 +26,8 @@ let ERROR_DESCRIPTIONS = [
   "unsupported type"
 ]
 
-// TODO: Review these error types
-public enum SkullError: ErrorType, CustomStringConvertible {
+/// Enumerate explicit error types of the Skull module.
+public enum SkullError: ErrorType {
   case AlreadyOpen(String)
   case FailedToFinalize(Array<ErrorType>)
   case InvalidURL
@@ -56,18 +36,48 @@ public enum SkullError: ErrorType, CustomStringConvertible {
   case NotOpen
   case SQLiteError(Int, String)
   case UnsupportedType
+}
 
+extension SkullError: CustomStringConvertible {
   public var description: String {
     switch self {
     case .SQLiteError(let code, let msg):
       return "SQLiteError code: \(code) message: \(msg)"
     default:
-      return ERROR_DESCRIPTIONS[self._code]
+      return errors[self._code]
     }
   }
 }
 
-func ok (code: CInt, _ ctx: COpaquePointer) throws {
+/// Define minimal SQL database API.
+protocol SQLDatabase {
+  var url: NSURL? { get }
+  
+  func flush() throws
+  func exec(sql: String, cb: ((SkullError?, [String:String]) -> Int)?) throws
+  func query(sql: String,cb: (SkullError?, SkullRow?) -> Int) throws
+  func update(sql: String, _ params: Any?...) throws
+}
+
+// MARK: Internals
+
+/// A column within a row.
+struct SkullColumn<T>: CustomStringConvertible {
+  let name: String
+  let value: T
+
+  var description: String {
+    return "SkullColumn: \(name), \(value)"
+  }
+}
+
+/// Evaluate SQLite result code and evemtually throw according `SkullError`.
+///
+/// - Parameter code: The SQLite result code.
+/// - Parameter ctx: The SQlite database connection handle.
+/// 
+/// - Throws: Throws `SkullError` if code is not `SQLITE_OK`.
+private func ok(code: CInt, _ ctx: COpaquePointer) throws {
   if code != SQLITE_OK {
     func msg () -> String {
       let cs = sqlite3_errmsg(ctx)
@@ -80,15 +90,11 @@ func ok (code: CInt, _ ctx: COpaquePointer) throws {
   }
 }
 
-public class Skull: CustomStringConvertible {
-  var ctx: COpaquePointer
-  var cache: [String:COpaquePointer]
-
-  public init () {
-    ctx = nil
-    cache = [String:COpaquePointer]()
-  }
-
+/// A database connection.
+final public class Skull: SQLDatabase {
+  
+  private var ctx: COpaquePointer = nil
+  
   private var filename: String? {
     guard ctx != nil else {
       return nil
@@ -96,37 +102,67 @@ public class Skull: CustomStringConvertible {
     let ptr: UnsafePointer<CChar> = sqlite3_db_filename(ctx, "main")
     return String.fromCString(ptr)
   }
-
-  public var description: String {
-    let str = filename ?? "closed"
-    return "Skull: \(str)"
+  
+  /// The URL of the database file or `nil` if this is an in-memory database.
+  public var url: NSURL? {
+    if let f = filename {
+      guard f != "" else {
+        return nil
+      }
+      return NSURL(string: f)
+    }
+    return nil
   }
   
-  func checkIfOpen () throws {
-    if let f = self.filename {
+  private func checkIfOpen() throws {
+    if let f = filename {
       throw SkullError.AlreadyOpen(f)
     }
   }
-
-  public func open () throws {
-    try checkIfOpen()
-    try open(":memory:")
-  }
-
-  public func open (url: NSURL) throws {
-    try checkIfOpen()
-    guard let filename = url.path else {
-      throw SkullError.InvalidURL
-    }
-    try open(filename)
-  }
-
-  func open (filename: String) throws {
+  
+  private func open(filename: String) throws {
     let flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE
     try ok(sqlite3_open_v2(filename, &ctx, flags, nil), ctx)
   }
+  
+  /// Open a SQLite database file at `url` or, if no URL is given, open a
+  /// private temporary in-memory database.
+  ///
+  /// - Parameter url: The URL of a SQLite database file.
+  ///
+  /// - Throws: Possibly throws `SkullError`.
+  private func open(url: NSURL? = nil) throws {
+    guard let url = url else {
+      return try open(":memory:")
+    }
+    guard url.scheme == "file" else {
+      throw SkullError.InvalidURL
+    }
+    guard let path = url.path else {
+      throw SkullError.InvalidURL
+    }
+    try checkIfOpen()
+    try open(path)
+  }
+  
+  // Cache for prepared statements.
+  var cache: [String:COpaquePointer]
+  
+  /// Creates and returns a Skull object.
+  /// 
+  /// - Parameter url: The URL of a SQLite database file.
+  ///
+  /// - Throws: Possibly throws `SkullError`.
+  public init(_ url: NSURL? = nil) throws {
+    cache = [String:COpaquePointer]()
+    try open(url)
+  }
 
-  public func flush () throws {
+  /// Finalize all prepared statements—SQL statements compiled to binary—and
+  /// remove them from the cache.
+  ///
+  /// - Throws: Possibly throws `SkullError`.
+  public func flush() throws {
     var errors = [ErrorType]()
     for (_, pStmt) in cache {
       do {
@@ -141,7 +177,10 @@ public class Skull: CustomStringConvertible {
     cache.removeAll()
   }
 
-  public func close () throws {
+  /// Close the database connection finalizing and flushing prepared statements.
+  ///
+  /// - Throws: Might throw `SkullError`.
+  public func close() throws {
     try flush()
     if ctx == nil {
       throw SkullError.NotOpen
@@ -150,7 +189,16 @@ public class Skull: CustomStringConvertible {
     ctx = nil
   }
 
-  public func exec (sql: String, cb ocb: ((SkullError?, [String:String]) -> Int)? = nil) throws {
+  /// Execute a string of `sql` incrementally applying the optional callback.
+  ///
+  /// - Parameter sql: The SQL string execute.
+  /// - Parameter cb: The callback to apply as execution proceeds.
+  ///
+  /// - Throws: Possibly throws `SkullError`.
+  public func exec(
+    sql: String,
+    cb ocb: ((SkullError?, [String:String]) -> Int)? = nil
+  ) throws {
     typealias CArr = UnsafeMutablePointer<UnsafeMutablePointer<Int8>>
     typealias Callback = (CInt, CArr, CArr) -> CInt
     var f: Callback? = nil
@@ -165,10 +213,10 @@ public class Skull: CustomStringConvertible {
             if let v = String.fromCString(texts[i]) {
               dict[k] = v
             } else {
-              errors++
+              errors += 1
             }
           } else {
-            errors++
+            errors += 1
           }
         }
         if errors > 0 {
@@ -180,7 +228,7 @@ public class Skull: CustomStringConvertible {
     try ok(skull_exec(ctx, sql, f), ctx)
   }
 
-  func column (pStmt: COpaquePointer, _ i: Int) -> SkullColumn<AnyObject>? {
+  private func column(pStmt: COpaquePointer, _ i: Int) -> SkullColumn<AnyObject>? {
     let index = CInt(i)
     let type = sqlite3_column_type(pStmt, index)
     let cname = sqlite3_column_name(pStmt, index)
@@ -203,7 +251,11 @@ public class Skull: CustomStringConvertible {
     return nil
   }
 
-  func textColumn (pStmt: COpaquePointer, index: CInt, name: String) -> SkullColumn<AnyObject>? {
+  private func textColumn(
+    pStmt: COpaquePointer,
+    index: CInt,
+    name: String
+  ) -> SkullColumn<AnyObject>? {
     let ptr: UnsafePointer<UInt8> = sqlite3_column_text(pStmt, index)
     let cs = UnsafePointer<CChar>(ptr)
     if let s = String.fromCString(cs) {
@@ -212,26 +264,37 @@ public class Skull: CustomStringConvertible {
     return nil
   }
 
-  func intColumn (pStmt: COpaquePointer, index: CInt, name: String) -> SkullColumn<AnyObject>? {
+  private func intColumn(
+    pStmt: COpaquePointer,
+    index: CInt,
+    name: String
+  ) -> SkullColumn<AnyObject>? {
     let value = Int(sqlite3_column_int(pStmt, index))
     return SkullColumn(name: name, value: value)
   }
 
-  func doubleColumn (pStmt: COpaquePointer, index: CInt, name: String) -> SkullColumn<AnyObject>? {
+  private func doubleColumn(
+    pStmt: COpaquePointer,
+    index: CInt,
+    name: String
+  ) -> SkullColumn<AnyObject>? {
     let value: Double = sqlite3_column_double(pStmt, index)
     return SkullColumn(name: name, value: value)
   }
 
-  func run (pStmt: COpaquePointer, cb optcb: ((SkullError?, SkullRow?) -> Int)? = nil) throws {
+  private func run(
+    pStmt: COpaquePointer,
+    cb optcb: ((SkullError?, SkullRow?) -> Int)? = nil
+  ) throws {
     var code: CInt
     while true {
       code = sqlite3_step(pStmt) // cling together, swing together
       if code == SQLITE_ROW {
         let count = Int(sqlite3_column_count(pStmt))
-        let row = SkullRow()
+        var row = SkullRow()
         for i in 0..<count {
           if let col = column(pStmt, i) {
-            row.append(col)
+            row[col.name] = col.value
           }
         }
         if let cb = optcb {
@@ -254,7 +317,10 @@ public class Skull: CustomStringConvertible {
     try ok(sqlite3_reset(pStmt), ctx)
   }
 
-  public func query (sql: String, cb: (SkullError?, SkullRow?) -> Int) throws {
+  public func query(
+    sql: String,
+    cb: (SkullError?, SkullRow?) -> Int
+  ) throws {
     var pStmt: COpaquePointer = nil
     if let cachedPStmt = cache[sql] {
       pStmt = cachedPStmt
@@ -265,7 +331,10 @@ public class Skull: CustomStringConvertible {
     try run(pStmt, cb: cb)
   }
 
-  public func update (sql: String, _ params: Any?...) throws {
+  public func update(
+    sql: String,
+    _ params: Any?...
+  ) throws {
     var pStmt: COpaquePointer = nil
     if let cachedPStmt = cache[sql] {
       pStmt = cachedPStmt // has bindings
@@ -296,5 +365,14 @@ public class Skull: CustomStringConvertible {
       }
     }
     try run(pStmt, cb: nil)
+  }
+}
+
+extension Skull: CustomStringConvertible {
+  
+  /// This Skull object as text string.
+  public var description: String {
+    let str = filename ?? "closed"
+    return "Skull: \(str)"
   }
 }

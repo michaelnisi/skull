@@ -7,25 +7,26 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4C344DDE1AC84BC700E04631 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4C344DDD1AC84BC700E04631 /* libsqlite3.dylib */; };
-		4C7171C819F6AB9500C7AB0D /* Skull.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7171C719F6AB9500C7AB0D /* Skull.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4C7171DF19F6ABD100C7AB0D /* skull_helpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171DB19F6ABD100C7AB0D /* skull_helpers.c */; };
 		4C7171E219F6ABD100C7AB0D /* Skull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171DE19F6ABD100C7AB0D /* Skull.swift */; };
 		4C7171EB19F6ABFB00C7AB0D /* affinity.sql in Resources */ = {isa = PBXBuildFile; fileRef = 4C7171E319F6ABFB00C7AB0D /* affinity.sql */; };
 		4C7171EC19F6ABFB00C7AB0D /* common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171E419F6ABFB00C7AB0D /* common.swift */; };
-		4C7171ED19F6ABFB00C7AB0D /* ConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171E519F6ABFB00C7AB0D /* ConnectionTests.swift */; };
 		4C7171F019F6ABFB00C7AB0D /* some.sql in Resources */ = {isa = PBXBuildFile; fileRef = 4C7171E819F6ABFB00C7AB0D /* some.sql */; };
 		4C7171F119F6ABFB00C7AB0D /* TemplateIcon2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4C7171E919F6ABFB00C7AB0D /* TemplateIcon2x.png */; };
 		4C7171F519F6AD6F00C7AB0D /* Skull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171DE19F6ABD100C7AB0D /* Skull.swift */; };
 		4C92A01B19F7EA5100310F03 /* skull_helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 4C7171DC19F6ABD100C7AB0D /* skull_helpers.h */; };
 		4C92A01C19F7EC3200310F03 /* skull_helpers.c in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171DB19F6ABD100C7AB0D /* skull_helpers.c */; };
-		4E2F46351B5017F900083C1F /* QueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171E719F6ABFB00C7AB0D /* QueryTests.swift */; };
-		4E2F46361B502C7D00083C1F /* ExecTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171E619F6ABFB00C7AB0D /* ExecTests.swift */; };
-		4E2F46371B50331900083C1F /* UpdateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171EA19F6ABFB00C7AB0D /* UpdateTests.swift */; };
+		4CE82D591D1A46DF000B36FC /* ConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171E519F6ABFB00C7AB0D /* ConnectionTests.swift */; };
+		4CE82D5A1D1A46E2000B36FC /* ExecTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171E619F6ABFB00C7AB0D /* ExecTests.swift */; };
+		4CE82D601D1AD356000B36FC /* UpdateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171EA19F6ABFB00C7AB0D /* UpdateTests.swift */; };
+		4CE82D621D1AD36C000B36FC /* QueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4C7171E719F6ABFB00C7AB0D /* QueryTests.swift */; };
+		4CE82D641D1F98E4000B36FC /* RowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CE82D631D1F98E4000B36FC /* RowTests.swift */; };
+		4CE933611D3F55B9001D6CD7 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE933551D3F4969001D6CD7 /* libsqlite3.tbd */; };
+		4CE933621D3F55F0001D6CD7 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CE933551D3F4969001D6CD7 /* libsqlite3.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		4C7171F619F6ADC800C7AB0D /* PBXContainerItemProxy */ = {
+		4CE933521D3F4900001D6CD7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4C7171B919F6AB9500C7AB0D /* Project object */;
 			proxyType = 1;
@@ -35,7 +36,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		4C344DDD1AC84BC700E04631 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		4C7171C219F6AB9500C7AB0D /* Skull.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Skull.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4C7171C619F6AB9500C7AB0D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4C7171C719F6AB9500C7AB0D /* Skull.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Skull.h; sourceTree = "<group>"; };
@@ -52,6 +52,10 @@
 		4C7171E819F6ABFB00C7AB0D /* some.sql */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = some.sql; sourceTree = "<group>"; };
 		4C7171E919F6ABFB00C7AB0D /* TemplateIcon2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TemplateIcon2x.png; sourceTree = "<group>"; };
 		4C7171EA19F6ABFB00C7AB0D /* UpdateTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateTests.swift; sourceTree = "<group>"; };
+		4CE82D631D1F98E4000B36FC /* RowTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RowTests.swift; sourceTree = "<group>"; };
+		4CE933551D3F4969001D6CD7 /* libsqlite3.tbd */ = {isa = PBXFileReference; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		4CE933851D4F1991001D6CD7 /* Skull-macos.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Skull-macos.h"; sourceTree = "<group>"; };
+		4CE933871D4F1991001D6CD7 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,7 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C344DDE1AC84BC700E04631 /* libsqlite3.dylib in Frameworks */,
+				4CE933611D3F55B9001D6CD7 /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -67,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4CE933621D3F55F0001D6CD7 /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -76,9 +81,10 @@
 		4C7171B819F6AB9500C7AB0D = {
 			isa = PBXGroup;
 			children = (
-				4C344DDD1AC84BC700E04631 /* libsqlite3.dylib */,
+				4CE933551D3F4969001D6CD7 /* libsqlite3.tbd */,
 				4C7171C419F6AB9500C7AB0D /* Skull */,
 				4C7171CE19F6AB9500C7AB0D /* SkullTests */,
+				4CE933841D4F1991001D6CD7 /* Skull-macos */,
 				4C7171C319F6AB9500C7AB0D /* Products */,
 			);
 			sourceTree = "<group>";
@@ -115,6 +121,7 @@
 		4C7171CE19F6AB9500C7AB0D /* SkullTests */ = {
 			isa = PBXGroup;
 			children = (
+				4CE82D631D1F98E4000B36FC /* RowTests.swift */,
 				4C7171E419F6ABFB00C7AB0D /* common.swift */,
 				4C7171E519F6ABFB00C7AB0D /* ConnectionTests.swift */,
 				4C7171E619F6ABFB00C7AB0D /* ExecTests.swift */,
@@ -136,6 +143,15 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		4CE933841D4F1991001D6CD7 /* Skull-macos */ = {
+			isa = PBXGroup;
+			children = (
+				4CE933851D4F1991001D6CD7 /* Skull-macos.h */,
+				4CE933871D4F1991001D6CD7 /* Info.plist */,
+			);
+			path = "Skull-macos";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -143,7 +159,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4C7171C819F6AB9500C7AB0D /* Skull.h in Headers */,
 				4C92A01B19F7EA5100310F03 /* skull_helpers.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -181,7 +196,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				4C7171F719F6ADC800C7AB0D /* PBXTargetDependency */,
+				4CE933531D3F4900001D6CD7 /* PBXTargetDependency */,
 			);
 			name = SkullTests;
 			productName = SkullTests;
@@ -200,6 +215,7 @@
 				TargetAttributes = {
 					4C7171C119F6AB9500C7AB0D = {
 						CreatedOnToolsVersion = 6.0.1;
+						DevelopmentTeam = X23V32HT8X;
 					};
 					4C7171CC19F6AB9500C7AB0D = {
 						CreatedOnToolsVersion = 6.0.1;
@@ -276,22 +292,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				4C7171EC19F6ABFB00C7AB0D /* common.swift in Sources */,
+				4CE82D601D1AD356000B36FC /* UpdateTests.swift in Sources */,
+				4CE82D591D1A46DF000B36FC /* ConnectionTests.swift in Sources */,
+				4CE82D5A1D1A46E2000B36FC /* ExecTests.swift in Sources */,
+				4CE82D641D1F98E4000B36FC /* RowTests.swift in Sources */,
+				4CE82D621D1AD36C000B36FC /* QueryTests.swift in Sources */,
 				4C92A01C19F7EC3200310F03 /* skull_helpers.c in Sources */,
-				4E2F46371B50331900083C1F /* UpdateTests.swift in Sources */,
-				4E2F46361B502C7D00083C1F /* ExecTests.swift in Sources */,
-				4E2F46351B5017F900083C1F /* QueryTests.swift in Sources */,
 				4C7171F519F6AD6F00C7AB0D /* Skull.swift in Sources */,
-				4C7171ED19F6ABFB00C7AB0D /* ConnectionTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		4C7171F719F6ADC800C7AB0D /* PBXTargetDependency */ = {
+		4CE933531D3F4900001D6CD7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 4C7171C119F6AB9500C7AB0D /* Skull */;
-			targetProxy = 4C7171F619F6ADC800C7AB0D /* PBXContainerItemProxy */;
+			targetProxy = 4CE933521D3F4900001D6CD7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -317,7 +334,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEFINES_MODULE = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -370,7 +387,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEFINES_MODULE = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -399,10 +416,10 @@
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 3;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Skull/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -412,8 +429,11 @@
 				MODULEMAP_PRIVATE_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelnisi.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/module";
+				SWIFT_INCLUDE_PATHS = "";
+				"SWIFT_INCLUDE_PATHS[sdk=iphoneos*]" = "$(SRCROOT)/module/iphoneos";
+				"SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]" = "$(SRCROOT)/module/iphonesimulator";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -424,11 +444,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
-				CURRENT_PROJECT_VERSION = 1;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 3;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 3;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				INFOPLIST_FILE = Skull/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -438,8 +458,11 @@
 				MODULEMAP_PRIVATE_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelnisi.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 				SKIP_INSTALL = YES;
-				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/module";
+				SWIFT_INCLUDE_PATHS = "";
+				"SWIFT_INCLUDE_PATHS[sdk=iphoneos*]" = "$(SRCROOT)/module/iphoneos";
+				"SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]" = "$(SRCROOT)/module/iphonesimulator";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -457,9 +480,12 @@
 				);
 				INFOPLIST_FILE = SkullTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "";
+				MODULEMAP_PRIVATE_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelnisi.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/module";
+				SWIFT_INCLUDE_PATHS = "";
+				"SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]" = "$(SRCROOT)/module/iphonesimulator";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 			};
 			name = Debug;
@@ -471,9 +497,12 @@
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = SkullTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "";
+				MODULEMAP_PRIVATE_FILE = "";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.michaelnisi.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_INCLUDE_PATHS = "$(SRCROOT)/module";
+				SWIFT_INCLUDE_PATHS = "";
+				"SWIFT_INCLUDE_PATHS[sdk=iphonesimulator*]" = "$(SRCROOT)/module/iphonesimulator";
 				SWIFT_INSTALL_OBJC_HEADER = YES;
 			};
 			name = Release;
