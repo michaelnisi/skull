@@ -1,6 +1,6 @@
 # Skull - Swift SQLite
 
-**Skull** is a bare-bones-interface for using [SQLite](https://www.sqlite.org/) from Swift. To keep it simple, **Skull** is not thread-safe and leaves access serialization to the user. **Skull** objects cache prepared statements.
+**Skull** is a frugal interface for using [SQLite](https://www.sqlite.org/) from Swift. To keep it simple, **Skull** is not thread-safe and leaves access serialization to the user. **Skull** objects cache prepared statements.
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/skull.svg)](http://travis-ci.org/michaelnisi/skull)
 
@@ -55,32 +55,32 @@ A `Skull` object, representing a database connection, offers following methods f
 func exec(sql: String, cb: ((SkullError?, [String:String]) -> Int)?)) throws
 ```
 
-- `sql` The SQL statement to execute.
+- `sql` The SQLite statement to execute.
 - `cb` An optional callback to handle results.
 
-Executes SQL statement and applies the callback for each result. The callback is optional. If a callback is provided, it can abort execution by not returning `0`.
+Executes SQLite statement and applies the callback for each result. The callback is optional. If a callback is provided, it can abort execution returning something other than `0`.
 
 ```swift
 func query(sql: String, cb: (SkullError?, SkullRow?) -> Int) throws
 ```
 
-- `sql` The SQL statement to apply.
+- `sql` The SQLite statement to apply.
 - `cb` The callback to handle results.
 
-Queries the database with the SQL statement and apply the callback for each resulting row.
+Queries the database with the SQLite statement and apply the callback for each resulting row.
 
 ```swift
 func update(sql: String, params: Any?...) throws
 ```
 
-- `sql` The SQL statement to apply.
+- `sql` The SQLite statement to apply.
 - `params` The parameters to bind to the statement.
 
-Updates the database by binding the parameters to an SQL statement, for example:
+Updates the database by binding the parameters to an SQLite statement, for example:
 
 ```swift
 let sql = "INSERT INTO t1 VALUES (?,?,?,?,?)"
-let error = db!.update(sql, 500.0, 500.0, 500.0, 500.0, "500.0")
+let error = db.update(sql, 500.0, 500.0, 500.0, 500.0, "500.0")
 ```
 
 ### Managing the database connection
@@ -95,9 +95,9 @@ Removes and finalizes all cached prepared statements.
 
 ## Install
 
-*For now I only support a Cocoa Touch framework target.*
+*For now, I only support a Cocoa Touch framework target.*
 
-Generate module map files for multiple platforms—iphoneos and iphonesimulator for now:
+Generate module map files for multiple platforms (iOS and iOS Simulator):
 
 ```bash
 $ ./configure

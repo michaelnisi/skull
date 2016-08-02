@@ -11,6 +11,6 @@ build:
 	xcodebuild build -configuration Debug
 
 test:
-	xcodebuild test -configuration Debug -scheme Skull -sdk iphonesimulator9.3
+	xcodebuild test -configuration Debug -scheme Skull -destination 'platform=iOS Simulator,name=iPhone 6s'
 
 .PHONY: all clean test
