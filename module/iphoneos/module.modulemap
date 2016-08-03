@@ -4,6 +4,6 @@ module sqlite3 [system] {
 }
 
 module skull_helpers {
-  header "/Users/michael/workspace/skull/Skull/skull_helpers.h"
+  header "/Users/michaelnisi/workspace/skull/Skull/skull_helpers.h"
   export *
 }
