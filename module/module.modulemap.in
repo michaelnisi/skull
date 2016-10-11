@@ -1,9 +1,0 @@
-module sqlite3 [system] {
-  header "@@SQLITE@@"
-  export *
-}
-
-module skull_helpers {
-  header "@@SRC@@/skull_helpers.h"
-  export *
-}

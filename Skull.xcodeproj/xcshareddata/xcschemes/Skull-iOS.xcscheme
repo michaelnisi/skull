@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "0700"
+   LastUpgradeVersion = "0800"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4C7171C119F6AB9500C7AB0D"
+               BlueprintIdentifier = "4CFF8FF91DA8D16F008DF75F"
                BuildableName = "Skull.framework"
-               BlueprintName = "Skull"
+               BlueprintName = "iOS"
                ReferencedContainer = "container:Skull.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -33,48 +33,23 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "4C7171CC19F6AB9500C7AB0D"
-               BuildableName = "SkullTests.xctest"
-               BlueprintName = "SkullTests"
+               BlueprintIdentifier = "4CFF90061DA8D255008DF75F"
+               BuildableName = "iOSTests.xctest"
+               BlueprintName = "iOSTests"
                ReferencedContainer = "container:Skull.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "SkullTestCase">
-               </Test>
-            </SkippedTests>
          </TestableReference>
       </Testables>
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4C7171C119F6AB9500C7AB0D"
+            BlueprintIdentifier = "4CFF8FF91DA8D16F008DF75F"
             BuildableName = "Skull.framework"
-            BlueprintName = "Skull"
+            BlueprintName = "iOS"
             ReferencedContainer = "container:Skull.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
-         <AdditionalOption
-            key = "MallocStackLogging"
-            value = ""
-            isEnabled = "YES">
-         </AdditionalOption>
-         <AdditionalOption
-            key = "DYLD_PRINT_LIBRARIES"
-            value = ""
-            isEnabled = "YES">
-         </AdditionalOption>
-         <AdditionalOption
-            key = "DYLD_PRINT_APIS"
-            value = ""
-            isEnabled = "YES">
-         </AdditionalOption>
-         <AdditionalOption
-            key = "NSDOLoggingEnabled"
-            value = "YES"
-            isEnabled = "YES">
-         </AdditionalOption>
       </AdditionalOptions>
    </TestAction>
    <LaunchAction
@@ -90,33 +65,13 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4C7171C119F6AB9500C7AB0D"
+            BlueprintIdentifier = "4CFF8FF91DA8D16F008DF75F"
             BuildableName = "Skull.framework"
-            BlueprintName = "Skull"
+            BlueprintName = "iOS"
             ReferencedContainer = "container:Skull.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
-         <AdditionalOption
-            key = "MallocStackLogging"
-            value = ""
-            isEnabled = "YES">
-         </AdditionalOption>
-         <AdditionalOption
-            key = "DYLD_PRINT_LIBRARIES"
-            value = ""
-            isEnabled = "YES">
-         </AdditionalOption>
-         <AdditionalOption
-            key = "DYLD_PRINT_APIS"
-            value = ""
-            isEnabled = "YES">
-         </AdditionalOption>
-         <AdditionalOption
-            key = "NSDOLoggingEnabled"
-            value = "YES"
-            isEnabled = "YES">
-         </AdditionalOption>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
@@ -128,9 +83,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "4C7171C119F6AB9500C7AB0D"
+            BlueprintIdentifier = "4CFF8FF91DA8D16F008DF75F"
             BuildableName = "Skull.framework"
-            BlueprintName = "Skull"
+            BlueprintName = "iOS"
             ReferencedContainer = "container:Skull.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

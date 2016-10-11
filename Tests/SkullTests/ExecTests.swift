@@ -7,7 +7,9 @@
 //
 
 import XCTest
+@testable import Skull
 
+// Interesting: all caps seems to be fine for enums in Swift 3.
 enum SQLiteTypeAffinity: String {
   case NULL = "null"
   case INTEGER = "integer"
@@ -18,16 +20,16 @@ enum SQLiteTypeAffinity: String {
 
 class ExecTests: XCTestCase {
   var db: Skull!
-  
+
   override func setUp() {
     super.setUp()
     db = try! Skull()
   }
-  
+
   override func tearDown() {
     do {
       try db.close()
-    } catch SkullError.NotOpen {
+    } catch SkullError.notOpen {
     } catch {
       XCTFail("should not throw unexpected error")
     }
@@ -35,33 +37,54 @@ class ExecTests: XCTestCase {
       super.tearDown()
     }
   }
-  
+
   func load() throws -> String? {
-    let bundle = NSBundle(forClass: self.dynamicType)
-    return try sqlFromBundle(bundle, withName: "affinity")
+    return [
+      "CREATE TABLE t1(t TEXT, nu NUMERIC, i INTEGER, r REAL, no BLOB)",
+      "INSERT INTO t1 VALUES('500.0', '500.0', '500.0', '500.0', '500.0')",
+      "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1",
+
+      "DELETE FROM t1",
+      "INSERT INTO t1 VALUES(500.0, 500.0, 500.0, 500.0, 500.0)",
+      "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1",
+
+      "DELETE FROM t1",
+      "INSERT INTO t1 VALUES(500, 500, 500, 500, 500)",
+      "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1",
+
+      "DELETE FROM t1",
+      "INSERT INTO t1 VALUES(x'0500', x'0500', x'0500', x'0500', x'0500')",
+      "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1",
+
+      "DELETE FROM t1",
+      "INSERT INTO t1 VALUES(NULL,NULL,NULL,NULL,NULL)",
+      "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1",
+    ].joined(separator: ";\n")
   }
-  
+
   func testVersion() {
+    var found: String? = nil
     try! db.exec("SELECT sqlite_version();") { er, row in
-      if er != nil {
-        XCTFail("should not error")
-      }
-      if let found = row["sqlite_version()"] {
-        print("** SQLite Version \(found)")
-        // XCTAssertEqual(found, "3.8.10.2", "should be expected version")
-      } else {
-        XCTFail("Should find version")
-      }
+      found = row["sqlite_version()"]
       return 0
     }
+    XCTAssertNotNil(found)
+    // print("     SQLite Version \(found!)")
   }
-  
+
+  func testThrowing() {
+    try! db.exec("")
+
+    XCTAssertThrowsError(try db.exec("SELECT wtf();"))
+    XCTAssertThrowsError(try db.exec("oh hi, I just wanted to ask"))
+  }
+
   func testExec() {
     typealias Row = [String:String]
-    func row(t: [SQLiteTypeAffinity]) -> Row {
+    func row(_ t: [SQLiteTypeAffinity]) -> Row {
       let names = ["t", "nu", "i", "r", "no"]
       var row = [String:String]()
-      for (i, type) in t.enumerate() {
+      for (i, type) in t.enumerated() {
         let name = names[i]
         row["typeof(\(name))"] = type.rawValue
       }
@@ -95,7 +118,7 @@ class ExecTests: XCTestCase {
     try! db.exec("SELECT * FROM t1;")
     XCTAssertEqual(count, r.count)
   }
-  
+
   func testPragmas() {
     let pragmas = [
       "application_id",
@@ -104,7 +127,7 @@ class ExecTests: XCTestCase {
       "busy_timeout",
       "cache_size",
       "cache_spill",
-      "case_sensitive_like",
+      "cell_size_check",
       "checkpoint_fullfsync",
       "collation_list",
       "compile_options",
@@ -113,14 +136,9 @@ class ExecTests: XCTestCase {
       "defer_foreign_keys",
       "encoding",
       "foreign_key_check",
-      "foreign_key_list",
       "foreign_keys",
       "freelist_count",
       "fullfsync",
-      "ignore_check_constraints",
-      "incremental_vacuum",
-      "index_info",
-      "index_list",
       "integrity_check",
       "journal_mode",
       "journal_size_limit",
@@ -130,7 +148,6 @@ class ExecTests: XCTestCase {
       "mmap_size",
       "page_count",
       "page_size",
-      "parser_trace",
       "query_only",
       "quick_check",
       "read_uncommitted",
@@ -140,28 +157,45 @@ class ExecTests: XCTestCase {
       "secure_delete",
       "shrink_memory",
       "soft_heap_limit",
+      "stats",
       "synchronous",
-      "table_info",
       "temp_store",
       "threads",
       "user_version",
-      "vdbe_addoptrace",
-      "vdbe_debug",
-      "vdbe_listing",
-      "vdbe_trace",
       "wal_autocheckpoint",
       "wal_checkpoint",
-      "writable_schema"
+      "writable_schema",
     ]
-    let sql = pragmas.map { "PRAGMA \($0);" }.joinWithSeparator("")
-    try! db.exec(sql) { er, found in
-      if er != nil {
-        XCTFail("should not error")
+
+    typealias Pragma = [String : String]
+
+    let found = pragmas.reduce([String : [Pragma]]()) { acc, p in
+      var pragmas = [Pragma]()
+      let sql = "PRAGMA \(p);"
+      try! db.exec(sql) { er, pragma in
+        if er != nil {
+          XCTFail("should not error")
+        }
+        pragmas.append(pragma)
+        return 0
       }
+      var d = acc
+      d[p] = pragmas
+      return d
+    }
+
+    for p in pragmas {
+      XCTAssert(found.keys.contains(p))
+    }
+  }
+
+  func testFalsePragma() {
+    try! db.exec("PRAGMA wtf;") { er, pragma in
+      XCTFail()
       return 0
     }
   }
-  
+
   func testExecAbort() {
     let sql = try! load()
     var count = 0
@@ -174,7 +208,7 @@ class ExecTests: XCTestCase {
         count += 1
         return 1
       }
-    } catch SkullError.SQLiteError(let code, let msg) {
+    } catch SkullError.sqliteError(let code, let msg) {
       XCTAssertEqual(code, 4)
       XCTAssertEqual(msg, "callback requested query abort")
       XCTAssertEqual(count, 1)

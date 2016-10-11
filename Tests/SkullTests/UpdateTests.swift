@@ -7,13 +7,43 @@
 //
 
 import XCTest
+@testable import Skull
 
-class UpdateTests: SkullTestCase {
+// TODO: Make UpdateTests less dumb
+
+class UpdateTests: XCTestCase {
+
+  var db: Skull!
 
   override func setUp() {
-    filename = "some"
     super.setUp()
     
+    db = try! Skull()
+
+    let sql = [
+      "CREATE TABLE t1(t TEXT, nu NUMERIC, i INTEGER, r REAL, no BLOB)",
+      "INSERT INTO t1 VALUES('500.0', '500.0', '500.0', '500.0', '500.0')",
+      "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1",
+
+      "DELETE FROM t1",
+      "INSERT INTO t1 VALUES(500.0, 500.0, 500.0, 500.0, 500.0)",
+      "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1",
+
+      "DELETE FROM t1",
+      "INSERT INTO t1 VALUES(500, 500, 500, 500, 500)",
+      "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1",
+
+      "DELETE FROM t1",
+      "INSERT INTO t1 VALUES(x'0500', x'0500', x'0500', x'0500', x'0500')",
+      "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1",
+
+      "DELETE FROM t1",
+      "INSERT INTO t1 VALUES(NULL,NULL,NULL,NULL,NULL)",
+      "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1",
+    ].joined(separator: ";\n")
+
+    try! db.exec(sql)
+
     var count = 0
     try! db.query("SELECT * FROM t1;") { error, row in
       XCTAssertNil(error)
@@ -23,6 +53,18 @@ class UpdateTests: SkullTestCase {
     }
     XCTAssertEqual(count, 1)
   }
+
+  override func tearDown() {
+    do {
+      try db.close()
+    } catch SkullError.notOpen {
+    } catch {
+      XCTFail("should not throw unexpected error")
+    }
+    defer {
+      super.tearDown()
+    }
+  }
   
   func testUpdate() {
     let sql = "INSERT INTO t1 VALUES (?,?,?,?,?);"
@@ -31,20 +73,22 @@ class UpdateTests: SkullTestCase {
     var count = 0
     try! db.query("SELECT * FROM t1;") { error, row in
       XCTAssertNil(error)
-
+      
       guard let r = row else {
         XCTFail("should have row")
         return -1
       }
       
-      XCTAssertEqual(r["t"] as? String, "500.0")
-      XCTAssertEqual(r["nu"] as? Int, 500)
-      XCTAssertEqual(r["i"] as? Int, 500)
-      XCTAssertEqual(r["r"] as? Double, 500.0)
-      XCTAssertEqual(r["no"] as? String, "500.0")
+      if count == 1 {
+        XCTAssertEqual(r["t"] as? String, "500.0")
+        XCTAssertEqual(r["nu"] as? Int, 500)
+        XCTAssertEqual(r["i"] as? Int, 500)
+        XCTAssertEqual(r["r"] as? Double, 500.0)
+        XCTAssertEqual(r["no"] as? String, "500.0")
+      }
       
       count += 1
-  
+      
       return 0
     }
     XCTAssertEqual(count, 3)
@@ -54,7 +98,7 @@ class UpdateTests: SkullTestCase {
     try! db.update("DELETE FROM t1;")
     do {
       try db.update("INSERT INTO t1 VALUES (?,?,?,?,?")
-    } catch SkullError.SQLiteError(let code, let msg) {
+    } catch SkullError.sqliteError(let code, let msg) {
       XCTAssertEqual(code, 1)
       XCTAssertEqual(msg, "near \"?\": syntax error")
     } catch {
@@ -98,7 +142,7 @@ class UpdateTests: SkullTestCase {
     selectShows()
     XCTAssertEqual(db.cache.count, 6, "should cache statements")
     selectShows()
-    try! db.close()
+    try! db.flush()
     XCTAssert(db.cache.isEmpty, "should purge statements")
   }
 }

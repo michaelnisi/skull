@@ -3,9 +3,7 @@
 set -o xtrace
 
 sdk() {
-  local l=`xcodebuild -showBuildSettings | grep $1`
-  local arr=($l)
-  echo ${arr[2]}
+  echo `xcodebuild -version -sdk $1 Path`
 }
 
 write() {
@@ -15,19 +13,22 @@ write() {
   sed \
     -e "s;@@SRC@@;`pwd`/Skull;g" \
     -e "s;@@SQLITE@@;$sdk$header;g" \
-    module/module.modulemap.in > $out
+    module.modulemap.in > $out
 }
 
 modulemap() {
-  local dir=$1
-  local name=$2
+  local dir="./module/$1"
   mkdir -p $dir
-  local sdk=$(sdk $name)
+  local sdk=$(sdk $1)
   write $sdk "$dir/module.modulemap"
 }
 
-modulemap "module/iphoneos" "SDKROOT"
-modulemap "module/iphonesimulator" "CORRESPONDING_SIMULATOR_SDK_DIR"
-modulemap "module/macosx" "DEVELOPER_SDK_DIR"
+modulemap "iphoneos"
+modulemap "iphonesimulator"
+modulemap "macosx"
+modulemap "appletvos"
+modulemap "appletvsimulator"
+modulemap "watchos"
+modulemap "watchsimulator"
 
 exit 0

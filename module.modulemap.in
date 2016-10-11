@@ -1,0 +1,5 @@
+module CSqlite3 [system] {
+  header "@@SQLITE@@"
+  link "sqlite3"
+  export *
+}

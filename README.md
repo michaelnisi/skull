@@ -1,27 +1,70 @@
 # Skull - Swift SQLite
 
-**Skull** is a frugal interface for using [SQLite](https://www.sqlite.org/) from Swift. To keep it simple, **Skull** is not thread-safe and leaves access serialization to the user. **Skull** objects cache prepared statements.
+The **Skull** Swift package offers a bare bones interface for [SQLite](https://www.sqlite.org/). Emphasising simplicity, its synchronous API implements only three functions, essential for interacting with SQLite: `exec`, `query`, and `update`. If you're in the market for a richer API, go check out [SQLite](https://github.com/stephencelis/SQLite.swift).
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/skull.svg)](http://travis-ci.org/michaelnisi/skull)
+[![Code Coverage](https://codecov.io/github/michaelnisi/skull/coverage.svg?branch=master)](https://codecov.io/github/michaelnisi/skull?branch=master)
+
+## Example
+
+```swift
+import Foundation
+import Skull
+
+let skull: DispatchQueue = DispatchQueue(label: "ink.codes.skull")
+let db = try! Skull()
+
+skull.async {
+  let sql = "create table planets (id integer primary key, au double, name text);"
+  try! db.exec(sql)
+}
+skull.async {
+  let sql = "insert into planets values (?, ?, ?);"
+  try! db.update(sql, 0, 0.4, "Mercury")
+  try! db.update(sql, 1, 0.7, "Venus")
+  try! db.update(sql, 2, 1, "Earth")
+  try! db.update(sql, 3, 1.5, "Mars")
+}
+skull.sync {
+  let sql = "select name from planets where au=1;"
+  try! db.query(sql) { er, row in
+    assert(er == nil)
+    let name = row?["name"] as! String
+    assert(name == "Earth")
+    return 0
+  }
+}
+```
+
+**Skull**'s tiny API leaves access serialization to users. Leveraging a dedicated serial queue, as shown in the example above, intuitively ensures ordered access.
 
 ## Types
 
-### SkullError
+```swift
+enum SkullError: Error
+```
 
-`SkullError` enumerates explicit error types of the Skull module.
+`SkullError` enumerates explicit errors.
 
-- `AlreadyOpen(String)`
-- `FailedToFinalize(Array<ErrorType>)`
-- `InvalidURL`
-- `NULLFromCString`
-- `NoPath`
-- `NotOpen`
-- `SQLiteError(Int, String)`
-- `UnsupportedType`
+- `alreadyOpen(String)`
+- `failedToFinalize(Array<Error>)`
+- `invalidURL`
+- `notOpen`
+- `sqliteError(Int, String)`
+- `sqliteMessage(String)`
+- `unsupportedType`
 
-### SkullRow
+```swift
+typealias SkullRow = Dictionary<String, AnyObject>
+```
 
-`SkullRow` models a database `row` with subscript access to column values. Supported types are `String`, `Int`, and `Double`. For example:
+`SkullRow` models a `row` within a SQLite table. Being a `Dictionary`, it offers subscript access to column values, which can be of three essential types:
+
+- `String`
+- `Int`
+- `Double`
+
+For example:
 
 ```swift
 row["a"] as String == "500.0"
@@ -29,13 +72,26 @@ row["b"] as Int == 500
 row["c"] as Double == 500.0
 ```
 
-### Skull
+```swift
+class Skull: SQLDatabase
+```
 
-`Skull`, the main object of this module, represents a SQLite database connection.
+`Skull`, the main object of this module, represents a SQLite database connection. It adopts the `SQLDatabase` protocol, which defines its interface:
+
+```swift
+protocol SQLDatabase {
+  var url: URL? { get }
+
+  func flush() throws
+  func exec(_ sql: String, cb: @escaping (SkullError?, [String : String]) -> Int) throws
+  func query(_ sql: String, cb: (SkullError?, SkullRow?) -> Int) throws
+  func update(_ sql: String, _ params: Any?...) throws
+}
+```
 
 ## Exports
 
-### Opening a database connection
+### Opening a Database Connection
 
 To open a database connection you initialize a new `Skull` object.
 
@@ -43,11 +99,11 @@ To open a database connection you initialize a new `Skull` object.
 init(_ url: NSURL? = nil) throws
 ```
 
-- url The location of the database file to open
+- `url` The location of the database file to open.
 
 Opens the database located at file `url`. If the file does not exist, it is created. Skipping `url` or passing `nil` opens an in-memory database.
 
-### Accessing the database
+### Accessing the Database
 
 A `Skull` object, representing a database connection, offers following methods for accessing the database.
 
@@ -55,35 +111,37 @@ A `Skull` object, representing a database connection, offers following methods f
 func exec(sql: String, cb: ((SkullError?, [String:String]) -> Int)?)) throws
 ```
 
-- `sql` The SQLite statement to execute.
-- `cb` An optional callback to handle results.
+- `sql` Zero or more UTF-8 encoded, semicolon-separated SQL statements.
+- `cb` A callback to handle results or abort by returning non-zero.
 
-Executes SQLite statement and applies the callback for each result. The callback is optional. If a callback is provided, it can abort execution returning something other than `0`.
+Executes SQL statements and applies the callback for each result, limited to strings in this case. The callback is optional, if provided, it can abort execution by returning non-zero. The callback doesn't just handle results, it can also monitor execution and, if need be, abort the operation; it is applied zero or more times.
 
 ```swift
 func query(sql: String, cb: (SkullError?, SkullRow?) -> Int) throws
 ```
 
-- `sql` The SQLite statement to apply.
-- `cb` The callback to handle results.
+- `sql` The SQL statement to query the database with.
+- `cb` The callback to handle resuting errors and rows.
 
-Queries the database with the SQLite statement and apply the callback for each resulting row.
+Queries the database with the specified *selective* SQL statement and applies the callback for each resulting row or occuring error.
 
 ```swift
 func update(sql: String, params: Any?...) throws
 ```
 
-- `sql` The SQLite statement to apply.
+- `sql` The SQL statement to apply.
 - `params` The parameters to bind to the statement.
 
-Updates the database by binding the parameters to an SQLite statement, for example:
+Updates the database by binding the specified parameters to an SQLite statement, for example:
 
 ```swift
-let sql = "INSERT INTO t1 VALUES (?,?,?,?,?)"
-let error = db.update(sql, 500.0, 500.0, 500.0, 500.0, "500.0")
+let sql = "insert into planets values (?, ?, ?);"
+try! db.update(sql, 0, 0.4, "Mercury")
 ```
 
-### Managing the database connection
+This method may throw `SkullError.sqliteError(Int, String)` or `SkullError.unsupportedType`.
+
+### Managing the Database Connection
 
 ```swift
 func flush() throws
@@ -93,24 +151,58 @@ Removes and finalizes all cached prepared statements.
 
 *The database connection is closed when the `Skull` object is deinitialized.*
 
-## Install
-
-*For now, I only support a Cocoa Touch framework target.*
-
-Generate module map files for multiple platforms (iOS and iOS Simulator):
-
-```bash
-$ ./configure
+```swift
+var url: URL? { get }
 ```
 
-Run the tests with:
+The location of the database file.
+
+## Build and Install
+
+### Xcode
+
+The [Xcode](https://developer.apple.com/xcode/) project in this repo provides targets for all [Apple platforms](https://developer.apple.com/discover/).
+
+You can conveniently run the tests with [Make](https://www.gnu.org/software/make/):
 
 ```bash
-$ make test
+$ make [check | check_macOS | check_iOS | check_watchOS | check_tvOS]
 ```
 
-If test succeeds you can add `Skull.xcodeproj` to your workspace to link with `Skull.framework` in your targets.
+And build the framework:
+
+```bash
+$ make [macOS | iOS | watchOS | tvOS]
+```
+
+Of course, you can also test and build using `xcodebuild` directly or from within Xcode.
+
+### Swift Package Manager
+
+Experimentally, you can also build **Skull** with [SPM](https://swift.org/package-manager/) for your current machine.
+
+If you are a [pkgsrc](https://pkgsrc.joyent.com/install-on-osx/) user, you should be good to go, if not, not only are you missing out, but you'd also have to fix the path to the SQLite3 header, defined in the library module dependency `CSqlite3`, found in `Packages`. The `Packages` directory is created by `swift test` or `swift build`.
+
+```
+module CSqlite3 [system] {
+  header "/opt/pkg/include/sqlite3.h"
+  link "sqlite3"
+  export *
+}
+```
+
+Once you made sure SPM sees the SQLite system library and all its dependencies, you can test **Skull** with:
+
+```
+swift test
+```
+
+And build the framework with:
+
+```
+swift build
+````
 
 ## License
 
-MIT
+[MIT](https://raw.github.com/michaelnisi/skull/master/LICENSE)

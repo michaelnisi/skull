@@ -7,9 +7,10 @@
 //
 
 import XCTest
+@testable import Skull
 
 class RowTests: XCTestCase {
-  
+
   func testPerf() {
     let db = try! Skull()
     let sql = "CREATE TABLE show (title TEXT);"
@@ -19,19 +20,15 @@ class RowTests: XCTestCase {
       return 0
     }
     for _ in 0..<10000 {
-      try! db.exec("INSERT INTO show VALUES(\(random()));") { error, row in
-        XCTAssertNil(error)
-        XCTAssertNil(row)
-        return 0
-      }
+      try! db.exec("INSERT INTO show VALUES(\(arc4random()));")
     }
-    
+
     // In this test we are interested in row creation and value access times,
-    // specifically in comparing boxed and plain Dictionary as row. The test
-    // showed that Dictionary is 67% better than a custom struct, therefor,
-    // compromising API to enhance performance, rows are Dictionary now.
-    
-    self.measureBlock {
+    // specifically in comparing boxed and plain `Dictionary` as row. The test
+    // showed that Dictionary is 67% better than a custom struct, therefor
+    // `SkullRow` is a `typealias` for `Dictionary<String, AnyObject>` now.
+
+    self.measure {
       try! db.query("SELECT * FROM show;") { error, row in
         XCTAssertNil(error)
         XCTAssertNotNil(row!["title"])

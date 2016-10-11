@@ -1,16 +1,45 @@
-project=Skull.xcodeproj
-scheme=Skull
-sdk=iphonesimulator
+P=Skull.xcodeproj
 
-all: clean build
+XCODEBUILD=xcodebuild
+
+IOS_DEST=-destination 'platform=iOS Simulator,name=iPhone 7'
+TVOS_DEST=-destination 'platform=tvOS Simulator,name=Apple TV 1080p'
+
+all: macOS iOS watchOS tvOS
+
+module:
+	./configure
 
 clean:
-	-rm -rf build
+	rm -rf module
+	$(XCODEBUILD) clean
 
-build:
-	xcodebuild build -configuration Debug
+test_%: module
+	$(XCODEBUILD) test -project $(P) -configuration Debug -scheme $(SCHEME) $(DEST)
 
-test:
-	xcodebuild test -configuration Debug -scheme Skull -destination 'platform=iOS Simulator,name=iPhone 6s'
+build_%: module
+	$(XCODEBUILD) build -project $(P) -configuration Release -scheme $(SCHEME)
 
-.PHONY: all clean test
+%macOS: SCHEME := Skull-macOS
+%iOS: SCHEME := Skull-iOS
+%watchOS: SCHEME := Skull-watchOS
+%tvOS: SCHEME := Skull-tvOS
+
+test_iOS: DEST := $(IOS_DEST)
+test_tvOS: DEST := $(TVOS_DEST)
+
+macOS: build_macOS
+check_macOS: test_macOS
+
+iOS: build_iOS
+check_iOS: test_iOS
+
+watchOS: build_watchOS
+# Got no tests for watchOS because XCTest isn't available there.
+
+tvOS: build_tvOS
+check_tvOS: test_tvOS
+
+check: check_macOS check_iOS check_tvOS
+
+.PHONY: all, clean, check, %OS

@@ -1,9 +1,0 @@
-module sqlite3 [system] {
-  header "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/usr/include/sqlite3.h"
-  export *
-}
-
-module skull_helpers {
-  header "/Users/michaelnisi/workspace/skull/Skull/skull_helpers.h"
-  export *
-}
