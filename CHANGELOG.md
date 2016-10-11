@@ -3,7 +3,7 @@
 This release is mainly about migrating to Swift 3, but I've also found it timely to adopt Swift Package Manager conventions.
 
 Being able to drop the C helpers, thanks to Swift 3 support of C function pointer callbacks, is my favorite in this release.
-([@michaelnisi])(https://github.com/michaelnisi))
+([@michaelnisi](https://github.com/michaelnisi))
 
 #### Swift Package Manager
 
