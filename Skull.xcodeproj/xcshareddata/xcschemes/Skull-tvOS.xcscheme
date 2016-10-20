@@ -33,7 +33,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "4CFF906E1DA96AF4008DF75F"
-               BuildableName = "Skull.xctest"
+               BuildableName = "tvOSTests.xctest"
                BlueprintName = "tvOSTests"
                ReferencedContainer = "container:Skull.xcodeproj">
             </BuildableReference>

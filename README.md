@@ -1,6 +1,8 @@
 # Skull - Swift SQLite
 
-The **Skull** Swift package offers a bare bones interface for [SQLite](https://www.sqlite.org/). Emphasising simplicity, its synchronous API implements only three functions, essential for interacting with SQLite: `exec`, `query`, and `update`. If you're in the market for a richer API, go check out [SQLite](https://github.com/stephencelis/SQLite.swift).
+> Everything should be made as simple as possible, but no simpler.<br>—*Albert Einstein*
+
+The **Skull** Swift package offers a bare bones interface for [SQLite](https://www.sqlite.org/). Emphasising simplicity, its synchronous API implements a minimal set of functions for interacting with SQLite: `exec`, `query`, and `update`. If you're in the market for a richer API, go check out [SQLite](https://github.com/stephencelis/SQLite.swift).
 
 [![Build Status](https://secure.travis-ci.org/michaelnisi/skull.svg)](http://travis-ci.org/michaelnisi/skull)
 [![Code Coverage](https://codecov.io/github/michaelnisi/skull/coverage.svg?branch=master)](https://codecov.io/github/michaelnisi/skull?branch=master)
@@ -36,7 +38,7 @@ skull.sync {
 }
 ```
 
-**Skull**'s tiny API leaves access serialization to users. Leveraging a dedicated serial queue, as shown in the example above, intuitively ensures ordered access.
+**Skull**'s tiny API leaves access serialization to users. Leveraging a dedicated serial queue, as shown in the example above, intuitively ensures serialized access.
 
 ## Types
 
@@ -159,23 +161,31 @@ The location of the database file.
 
 ## Build and Install
 
+Before building this software, we need to generate [module maps](http://clang.llvm.org/docs/Modules.html#module-maps) for the SQLite system library:
+
+```sh
+make module
+```
+
 ### Xcode
 
 The [Xcode](https://developer.apple.com/xcode/) project in this repo provides targets for all [Apple platforms](https://developer.apple.com/discover/).
 
 You can conveniently run the tests with [Make](https://www.gnu.org/software/make/):
 
-```bash
+```sh
 $ make [check | check_macOS | check_iOS | check_watchOS | check_tvOS]
 ```
 
 And build the framework:
 
-```bash
+```sh
 $ make [macOS | iOS | watchOS | tvOS]
 ```
 
 Of course, you can also test and build using `xcodebuild` directly or from within Xcode.
+
+*I recommend [Xcode Workspaces](https://developer.apple.com/library/content/featuredarticles/XcodeConcepts/Concept-Workspace.html) for composing your programs.*
 
 ### Swift Package Manager
 
@@ -193,13 +203,13 @@ module CSqlite3 [system] {
 
 Once you made sure SPM sees the SQLite system library and all its dependencies, you can test **Skull** with:
 
-```
+```sh
 swift test
 ```
 
 And build the framework with:
 
-```
+```sh
 swift build
 ````
 
