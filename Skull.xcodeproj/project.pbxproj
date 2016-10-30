@@ -386,6 +386,7 @@
 					};
 					4CFF8FF91DA8D16F008DF75F = {
 						CreatedOnToolsVersion = 8.0;
+						LastSwiftMigration = 0800;
 						ProvisioningStyle = Automatic;
 					};
 					4CFF90061DA8D255008DF75F = {
@@ -579,6 +580,7 @@
 			baseConfigurationReference = 4CFF8FBF1DA7728B008DF75F /* Config.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = "$(inherited)";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(inherited)";
 				PRODUCT_NAME = "$(inherited)";
 			};
@@ -589,6 +591,7 @@
 			baseConfigurationReference = 4CFF8FBF1DA7728B008DF75F /* Config.xcconfig */;
 			buildSettings = {
 				INFOPLIST_FILE = "$(inherited)";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "$(inherited)";
 				PRODUCT_NAME = "$(inherited)";
 			};
@@ -872,7 +875,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -932,7 +935,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = "ink.codes.$(PROJECT_NAME)";
@@ -1438,6 +1441,7 @@
 				4CFF90011DA8D16F008DF75F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4CFF900F1DA8D255008DF75F /* Build configuration list for PBXNativeTarget "iOSTests" */ = {
 			isa = XCConfigurationList;
@@ -1446,6 +1450,7 @@
 				4CFF90111DA8D255008DF75F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4CFF90561DA93A58008DF75F /* Build configuration list for PBXNativeTarget "watchOS" */ = {
 			isa = XCConfigurationList;
@@ -1454,6 +1459,7 @@
 				4CFF90581DA93A58008DF75F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4CFF90651DA93B3E008DF75F /* Build configuration list for PBXNativeTarget "tvOS" */ = {
 			isa = XCConfigurationList;
@@ -1462,6 +1468,7 @@
 				4CFF90671DA93B3E008DF75F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4CFF90771DA96AF5008DF75F /* Build configuration list for PBXNativeTarget "tvOSTests" */ = {
 			isa = XCConfigurationList;
@@ -1470,6 +1477,7 @@
 				4CFF90791DA96AF5008DF75F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
