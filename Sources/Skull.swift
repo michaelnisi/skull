@@ -44,7 +44,7 @@ extension SkullError: CustomStringConvertible {
 }
 
 /// A row within a SQLite table.
-public typealias SkullRow = Dictionary<String, AnyObject>
+public typealias SkullRow = Dictionary<String, Any>
 
 /// Defines a minimal SQL database API.
 public protocol SQLDatabase {
@@ -64,7 +64,7 @@ public protocol SQLDatabase {
 // MARK: - Internals
 
 /// A column within a row.
-private struct SkullColumn<T>: CustomStringConvertible {
+struct SkullColumn<T>: CustomStringConvertible {
   let name: String
   let value: T
 

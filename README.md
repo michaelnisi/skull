@@ -1,11 +1,11 @@
+[![Build Status](https://secure.travis-ci.org/michaelnisi/skull.svg)](http://travis-ci.org/michaelnisi/skull)
+[![Code Coverage](https://codecov.io/github/michaelnisi/skull/coverage.svg?branch=master)](https://codecov.io/github/michaelnisi/skull?branch=master)
+
 # Skull - Swift SQLite
 
 > Everything should be made as simple as possible, but no simpler.<br>—*Albert Einstein*
 
 The **Skull** Swift package offers a bare bones interface for [SQLite](https://www.sqlite.org/). Emphasising simplicity, its synchronous API implements a minimal set of functions for interacting with SQLite: `exec`, `query`, and `update`. If you're in the market for a richer API, go check out [SQLite](https://github.com/stephencelis/SQLite.swift).
-
-[![Build Status](https://secure.travis-ci.org/michaelnisi/skull.svg)](http://travis-ci.org/michaelnisi/skull)
-[![Code Coverage](https://codecov.io/github/michaelnisi/skull/coverage.svg?branch=master)](https://codecov.io/github/michaelnisi/skull?branch=master)
 
 ## Example
 
@@ -57,7 +57,7 @@ enum SkullError: Error
 - `unsupportedType`
 
 ```swift
-typealias SkullRow = Dictionary<String, AnyObject>
+typealias SkullRow = Dictionary<String, Any>
 ```
 
 `SkullRow` models a `row` within a SQLite table. Being a `Dictionary`, it offers subscript access to column values, which can be of three essential types:
