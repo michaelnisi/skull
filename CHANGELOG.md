@@ -1,3 +1,7 @@
+### 4.0.3 (2016-10-29)
+
+Correct iOS deployment target and version.
+
 ### 4.0.2 (2016-10-29)
 
 Minor adjustments resulting from dogfooding.
