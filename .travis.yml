@@ -1,7 +1,7 @@
 sudo: false
 language: objective-c
 osx_image: xcode8
-script: "make check"
+script: "travis_retry make check"
 after_success:
   - bash <(curl -s https://codecov.io/bash) -J 'Skull'
 branches:

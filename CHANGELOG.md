@@ -1,3 +1,15 @@
+### 4.0.2 (2016-10-29)
+
+Minor adjustments resulting from dogfooding.
+
+- [`57e9d15`](https://github.com/michaelnisi/skull/commit/57e9d15c247fc68c235ae90f643af520fac96b39)
+Complying with Apple’s recommendation to support the latest two majors, this sets the iOS deployment target to 9.0.
+([@michaelnisi](https://github.com/michaelnisi))
+
+- [`17cdd5f`](https://github.com/michaelnisi/skull/commit/17cdd5feeed31670a26d5ec3b7d391accbca8ded)
+Type SkullRow value as Any.
+([@michaelnisi](https://github.com/michaelnisi))
+
 ### 4.0.1 (2016-10-20)
 
 A quick release improving the `README` and practicing writing this `CHANGELOG`—it’s quite likely that I won’t be doing this for long. Let’s see!
