@@ -35,7 +35,7 @@ iOS: build_iOS
 check_iOS: test_iOS
 
 watchOS: build_watchOS
-# Got no tests for watchOS because XCTest isn't available there.
+# No tests for watchOS because XCTest isn't available there.
 
 tvOS: build_tvOS
 check_tvOS: test_tvOS

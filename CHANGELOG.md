@@ -1,3 +1,8 @@
+### 4.0.4 (2016-11-09)
+
+Build with Xcode 8.1 adopting recommended settings and set `SWIFT_INCLUDE_PATHS` conditionally to find the correct module map for each platform including the different simulators.
+([@michaelnisi](https://github.com/michaelnisi))
+
 ### 4.0.3 (2016-10-29)
 
 Correct iOS deployment target and version.
