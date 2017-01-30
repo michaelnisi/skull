@@ -25,9 +25,7 @@
 		4CFF90171DA8D2F4008DF75F /* UpdateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF8F961DA6C630008DF75F /* UpdateTests.swift */; };
 		4CFF901A1DA8D45E008DF75F /* Skull.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CFF8FFA1DA8D16F008DF75F /* Skull.framework */; };
 		4CFF90591DA93A8A008DF75F /* Skull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF8F8F1DA6C5CF008DF75F /* Skull.swift */; };
-		4CFF905A1DA93A92008DF75F /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CFF904A1DA939E0008DF75F /* libsqlite3.tbd */; };
 		4CFF90681DA93B72008DF75F /* Skull.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF8F8F1DA6C5CF008DF75F /* Skull.swift */; };
-		4CFF906A1DA93B7A008DF75F /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 4CFF90691DA93B7A008DF75F /* libsqlite3.tbd */; };
 		4CFF907A1DA96B41008DF75F /* ConnectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF8F911DA6C630008DF75F /* ConnectionTests.swift */; };
 		4CFF907B1DA96B41008DF75F /* ExecTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF8F921DA6C630008DF75F /* ExecTests.swift */; };
 		4CFF907C1DA96B41008DF75F /* QueryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CFF8F931DA6C630008DF75F /* QueryTests.swift */; };
@@ -76,10 +74,8 @@
 		4CFF8FDC1DA78C3A008DF75F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		4CFF8FFA1DA8D16F008DF75F /* Skull.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Skull.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CFF90071DA8D255008DF75F /* iOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		4CFF904A1DA939E0008DF75F /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS3.0.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		4CFF90511DA93A58008DF75F /* Skull.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Skull.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4CFF90601DA93B3E008DF75F /* Skull.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Skull.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		4CFF90691DA93B7A008DF75F /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS10.0.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		4CFF906F1DA96AF4008DF75F /* tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = tvOSTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -119,7 +115,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CFF905A1DA93A92008DF75F /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -127,7 +122,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4CFF906A1DA93B7A008DF75F /* libsqlite3.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,8 +186,6 @@
 		4CFF8FA61DA6C6ED008DF75F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				4CFF90691DA93B7A008DF75F /* libsqlite3.tbd */,
-				4CFF904A1DA939E0008DF75F /* libsqlite3.tbd */,
 				4CFF8FA71DA6C6EE008DF75F /* libsqlite3.tbd */,
 			);
 			name = Frameworks;
