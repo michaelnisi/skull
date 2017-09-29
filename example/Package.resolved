@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "CSqlite3",
-        "repositoryURL": "git@github.com:michaelnisi/csqlite.git",
+        "repositoryURL": "https://github.com/michaelnisi/csqlite.git",
         "state": {
           "branch": null,
           "revision": "405f4a7dfa4e2b8ab6d2fa733727c3e7f8ccfe19",
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/michaelnisi/skull",
         "state": {
           "branch": null,
-          "revision": "3dbc8d074e60dce93a2b7bd7842271cddddbf0ed",
-          "version": "4.0.4"
+          "revision": "3aa0c9472842fca9babcb5931a62c23b474bda4f",
+          "version": "5.0.0"
         }
       }
     ]
