@@ -5,7 +5,7 @@
 
 > Everything should be made as simple as possible, but no simpler.<br>—*Albert Einstein*
 
-The **Skull** Swift package offers a bare bones interface for [SQLite](https://www.sqlite.org/). Emphasising simplicity, its synchronous API implements a minimal set of functions for interacting with SQLite: `exec`, `query`, and `update`. If you're in the market for a richer API, go check out [SQLite](https://github.com/stephencelis/SQLite.swift).
+The **Skull** Swift package offers a bare bones (400 LOC) interface for [SQLite](https://www.sqlite.org/). Emphasising simplicity, its synchronous API implements a minimal set of functions for interacting with SQLite.
 
 ## Example
 
@@ -20,6 +20,7 @@ skull.async {
   let sql = "create table planets (id integer primary key, au double, name text);"
   try! db.exec(sql)
 }
+
 skull.async {
   let sql = "insert into planets values (?, ?, ?);"
   try! db.update(sql, 0, 0.4, "Mercury")
@@ -27,18 +28,29 @@ skull.async {
   try! db.update(sql, 2, 1, "Earth")
   try! db.update(sql, 3, 1.5, "Mars")
 }
+
+// Synchronously, just so we don‘t exit before the callbacks are run.
 skull.sync {
   let sql = "select name from planets where au=1;"
   try! db.query(sql) { er, row in
     assert(er == nil)
     let name = row?["name"] as! String
     assert(name == "Earth")
+    print(name)
     return 0
   }
 }
 ```
 
-**Skull**'s tiny API leaves access serialization to users. Leveraging a dedicated serial queue, as shown in the example above, intuitively ensures serialized access.
+To build and run this example, in this repo, try:
+
+```
+cd example
+swift build
+./.build/x86_64-apple-macosx10.10/debug/example
+```
+
+**Skull** is deliberately thin, its tiny API leaves access serialization to users. Leveraging a dedicated serial queue, as shown in the example above, intuitively ensures serialized access.
 
 ## Types
 
@@ -98,7 +110,7 @@ protocol SQLDatabase {
 To open a database connection you initialize a new `Skull` object.
 
 ```swift
-init(_ url: NSURL? = nil) throws
+init(_ url: URL? = nil) throws
 ```
 
 - `url` The location of the database file to open.
@@ -189,9 +201,9 @@ Of course, you can also test and build using `xcodebuild` directly or from withi
 
 ### Swift Package Manager
 
-Experimentally, you can also build **Skull** with [SPM](https://swift.org/package-manager/) for your current machine.
+Experimentally, you can also build **Skull** with [SPM](https://swift.org/package-manager/) for your current platform.
 
-If you are a [pkgsrc](https://pkgsrc.joyent.com/install-on-osx/) user, you should be good to go, if not, not only are you missing out, but you'd also have to fix the path to the SQLite3 header, defined in the library module dependency `CSqlite3`, found in `Packages`. The `Packages` directory is created by `swift test` or `swift build`.
+If you are a [pkgsrc](https://pkgsrc.joyent.com/install-on-osx/) user, you should be good to go. If not, you have to fix the path to the SQLite3 header, defined in the library module dependency `CSqlite3`, found in `Packages`. The `Packages` directory is created by `swift test` or `swift build`.
 
 ```
 module CSqlite3 [system] {
@@ -201,7 +213,7 @@ module CSqlite3 [system] {
 }
 ```
 
-Once you made sure SPM sees the SQLite system library and all its dependencies, you can test **Skull** with:
+Once you made sure SPM sees the SQLite system library, and all its dependencies, you can test **Skull** with:
 
 ```sh
 swift test

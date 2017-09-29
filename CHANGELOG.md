@@ -1,3 +1,8 @@
+### 5.0.0 (2017-09-29)
+
+Welcome back, this is mostly a housekeeping release. Update to Swift 4 and build with Xcode 9. Update package to [PackageDescription API Version 4](https://github.com/apple/swift-package-manager/blob/master/Documentation/PackageDescriptionV4.md). The tests have been refined, the fastest way to run them is `swift test`. Also, I‘ve added a simple example, built with the Package Manager.
+([@michaelnisi](https://github.com/michaelnisi))
+
 ### 4.0.4 (2016-11-09)
 
 Build with Xcode 8.1 adopting recommended settings and set `SWIFT_INCLUDE_PATHS` conditionally to find the correct module map for each platform including the different simulators.

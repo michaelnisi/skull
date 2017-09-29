@@ -3,7 +3,7 @@ P=Skull.xcodeproj
 XCODEBUILD=xcodebuild
 
 IOS_DEST=-destination 'platform=iOS Simulator,name=iPhone 7'
-TVOS_DEST=-destination 'platform=tvOS Simulator,name=Apple TV 1080p'
+TVOS_DEST=-destination 'platform=tvOS Simulator,name=Apple TV'
 
 all: macOS iOS watchOS tvOS
 
