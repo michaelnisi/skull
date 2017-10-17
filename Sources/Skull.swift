@@ -258,7 +258,7 @@ final public class Skull: SQLDatabase {
     index: CInt,
     name: String
   ) -> SkullColumn<AnyObject>? {
-    let value = Int(sqlite3_column_int(pStmt, index))
+    let value = Int64(sqlite3_column_int64(pStmt, index))
     return SkullColumn(name: name, value: value as AnyObject)
   }
 
