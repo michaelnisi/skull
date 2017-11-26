@@ -258,7 +258,7 @@ final public class Skull: SQLDatabase {
     index: CInt,
     name: String
   ) -> SkullColumn<AnyObject>? {
-    let value = Int(sqlite3_column_int(pStmt, index))
+    let value = Int64(sqlite3_column_int64(pStmt, index))
     return SkullColumn(name: name, value: value as AnyObject)
   }
 
@@ -358,7 +358,7 @@ final public class Skull: SQLDatabase {
     case let v as Double:
       try ok(sqlite3_bind_double(statement, index, CDouble(v)), ctx!)
     case let v as String:
-      let len = CInt(v.characters.count)
+      let len = CInt(v.count)
       try ok(sqlite3_bind_text(statement, index, v, len, SQLITE_TRANSIENT), ctx!)
     default:
       throw SkullError.unsupportedType
