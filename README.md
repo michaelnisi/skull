@@ -203,7 +203,7 @@ Of course, you can also test and build using `xcodebuild` directly or from withi
 
 Experimentally, you can also build **Skull** with [SPM](https://swift.org/package-manager/) for your current platform.
 
-If you are a [pkgsrc](https://pkgsrc.joyent.com/install-on-osx/) user, you should be good to go. If not, you have to fix the path to the SQLite3 header, defined in the library module dependency `CSqlite3`, found in `Packages`. The `Packages` directory is created by `swift test` or `swift build`.
+If you are a [pkgsrc](https://pkgsrc.joyent.com/install-on-osx/) user, you should be good to go. If not, you have to fix the path to the SQLite3 header, defined in the library module dependency `CSqlite3`, found in `Packages`. The `Packages` directory is created by `swift test` or `swift build`. [Here](https://github.com/cmacrae/savemacos) is a super easy way to **install pkgsrc on macOS**.
 
 ```
 module CSqlite3 [system] {
