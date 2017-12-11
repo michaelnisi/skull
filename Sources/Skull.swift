@@ -12,7 +12,7 @@ import CSqlite3
 /// `SkullError` enumerates explicit errors.
 public enum SkullError: Error {
   case alreadyOpen(String)
-  case failedToFinalize(Array<Error>)
+  case failedToFinalize([Error])
   case invalidURL
   case notOpen
   case sqliteError(Int, String)
@@ -25,18 +25,18 @@ extension SkullError: CustomStringConvertible {
     switch self {
     case .alreadyOpen(let filename):
       return "Skull: \(filename) already open"
-    case .sqliteError(let code, let msg):
-      return "Skull: \(code): \(msg)"
-    case .sqliteMessage(let msg):
-      return "Skull: \(msg)"
+    case .failedToFinalize(let errors):
+      return "Skull: failed to finalize: \(errors)"
     case .invalidURL:
       return "Skull: invalid URL"
     case .notOpen:
       return "Skull: not open"
+    case .sqliteError(let code, let msg):
+      return "Skull: \(code): \(msg)"
+    case .sqliteMessage(let msg):
+      return "Skull: \(msg)"
     case .unsupportedType:
       return "Skull: unsupported type"
-    case .failedToFinalize(let errors):
-      return "Skull: failed to finalize: \(errors)"
     }
   }
 }
@@ -63,7 +63,7 @@ struct SkullColumn<T>: CustomStringConvertible {
   let value: T
 
   var description: String {
-    return "SkullColumn: \(name), \(value)"
+    return "SkullColumn: { \(name), \(value) }"
   }
 }
 
@@ -404,20 +404,30 @@ final public class Skull: SQLDatabase {
     cache.removeAll()
   }
 
-  /// Close the database connection finalizing and flushing prepared statements.
+  /// Closes the database connection finalizing and flushing prepared statements.
   ///
   /// - Throws: Might throw `SkullError`.
-  public func close() throws {
+  private func close() throws {
     try flush()
     guard ctx != nil else { throw SkullError.notOpen }
     try ok(sqlite3_close(ctx), ctx!)
     ctx = nil
   }
+
+  deinit {
+    do {
+      try close()
+    } catch {
+      // This probably just means, we’ve been opened with an invalid URL.
+    }
+  }
 }
 
 extension Skull: CustomStringConvertible {
+  
   public var description: String {
-    let str = filename ?? "closed"
+    let str = url?.description ?? "in-memory"
     return "Skull: \(str)"
   }
+  
 }

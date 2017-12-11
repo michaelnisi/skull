@@ -18,7 +18,7 @@ class ConnectionTests: XCTestCase {
     let path: String = paths[0]
     let url = URL(string: "test.db", relativeTo: URL(fileURLWithPath: path))!
     let db = try! Skull(url)
-    XCTAssertEqual(String(describing: db), "Skull: \(url.path)")
+    XCTAssertEqual(db.description, "Skull: \(url.path)")
   }
 
   func testInitWithInvalidURL() {
@@ -37,5 +37,6 @@ class ConnectionTests: XCTestCase {
   func testInitWithoutURL() {
     let db = try! Skull()
     XCTAssertNil(db.url)
+    XCTAssertEqual(db.description, "Skull: in-memory")
   }
 }

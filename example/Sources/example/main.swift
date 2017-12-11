@@ -2,7 +2,9 @@ import Foundation
 import Skull
 
 let skull: DispatchQueue = DispatchQueue(label: "ink.codes.skull")
-let db = try! Skull()
+let db = skull.sync {
+  return try! Skull()
+}
 
 skull.async {
   let sql = "create table planets (id integer primary key, au double, name text);"
@@ -17,7 +19,6 @@ skull.async {
   try! db.update(sql, 3, 1.5, "Mars")
 }
 
-// Synchronously, just so we don‘t exit before the callbacks are run.
 skull.sync {
   let sql = "select name from planets where au=1;"
   try! db.query(sql) { er, row in

@@ -26,18 +26,6 @@ class ExecTests: XCTestCase {
     db = try! Skull()
   }
 
-  override func tearDown() {
-    do {
-      try db.close()
-    } catch SkullError.notOpen {
-    } catch {
-      XCTFail("should not throw unexpected error")
-    }
-    defer {
-      super.tearDown()
-    }
-  }
-
   func load() throws -> String? {
     return """
       CREATE TABLE t1(t TEXT, nu NUMERIC, i INTEGER, r REAL, no BLOB);

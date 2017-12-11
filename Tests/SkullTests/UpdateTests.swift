@@ -21,18 +21,6 @@ class UpdateTests: XCTestCase {
     try! db.exec(sql)
   }
 
-  override func tearDown() {
-    defer {
-      super.tearDown()
-    }
-    do {
-      try db.close()
-    } catch SkullError.notOpen {
-    } catch {
-      XCTFail("should not throw unexpected error")
-    }
-  }
-
   func testTypes() {
     try! db.exec(
       "SELECT typeof(t), typeof(nu), typeof(i), typeof(r), typeof(no) FROM t1;"

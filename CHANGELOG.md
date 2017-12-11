@@ -1,3 +1,8 @@
+### 5.1.0 (2017-12-11)
+
+Open and close the database with the `Skull` object itself. Creating the object opens the database, dismissing the object closes the database.
+([@michaelnisi](https://github.com/michaelnisi))
+
 ### 5.0.0 (2017-09-29)
 
 Welcome back, this is mostly a housekeeping release. Update to Swift 4 and build with Xcode 9. Update package to [PackageDescription API Version 4](https://github.com/apple/swift-package-manager/blob/master/Documentation/PackageDescriptionV4.md). The tests have been refined, the fastest way to run them is `swift test`. Also, I‘ve added a simple example, built with the Package Manager.
