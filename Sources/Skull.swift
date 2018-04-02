@@ -394,7 +394,7 @@ final public class Skull: SQLDatabase {
   /// an error in its most recent appliance.
   public func flush() throws {
     let pStmts = cache.values
-    let errors: [Error] = pStmts.flatMap {
+    let errors: [Error] = pStmts.compactMap {
       do { try finalize(statement: $0)} catch { return error }
       return nil
     }
