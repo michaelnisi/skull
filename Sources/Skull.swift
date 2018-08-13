@@ -13,7 +13,7 @@ import CSqlite3
 public enum SkullError: Error {
   case alreadyOpen(String)
   case failedToFinalize([Error])
-  case invalidURL
+  case invalidURL(URL)
   case notOpen
   case sqliteError(Int, String)
   case sqliteMessage(String)
@@ -27,8 +27,8 @@ extension SkullError: CustomStringConvertible {
       return "Skull: \(filename) already open"
     case .failedToFinalize(let errors):
       return "Skull: failed to finalize: \(errors)"
-    case .invalidURL:
-      return "Skull: invalid URL"
+    case .invalidURL(let url):
+      return "Skull: invalid URL: \(url)"
     case .notOpen:
       return "Skull: not open"
     case .sqliteError(let code, let msg):
@@ -133,7 +133,7 @@ final public class Skull: SQLDatabase {
       return try open(":memory:")
     }
     guard url.scheme == "file" else {
-      throw SkullError.invalidURL
+      throw SkullError.invalidURL(url)
     }
     try checkIfOpen()
     try open(url.path)

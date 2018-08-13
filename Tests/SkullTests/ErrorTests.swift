@@ -20,8 +20,8 @@ class ErrorTests: XCTestCase {
       "Skull: failed to finalize: []"
     )
     XCTAssertEqual(
-      SkullError.invalidURL.description,
-      "Skull: invalid URL"
+      SkullError.invalidURL(URL(string: "https://apple.com")!).description,
+      "Skull: invalid URL: https://apple.com"
     )
     XCTAssertEqual(
       SkullError.notOpen.description,
