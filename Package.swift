@@ -8,7 +8,7 @@ let package = Package(
     .library(name: "Skull", targets: ["Skull"])
   ],
   targets: [
-    .systemLibrary(name: "CSqlite3", path: "module/macosx"),
+    .systemLibrary(name: "CSqlite3", path: "Libraries/CSqlite3"),
     .target(name: "Skull", dependencies: ["CSqlite3"], path: "Sources"),
     .testTarget(name: "SkullTests", dependencies: ["Skull"])
   ],
