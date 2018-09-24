@@ -47,7 +47,7 @@ To build and run this example, in this repo, try:
 cd example
 swift build
 swift run
-``
+```
 
 **Skull** is deliberately thin, its tiny API leaves access serialization to users. Leveraging a dedicated serial queue, as shown in the example above, intuitively ensures serialized access.
 
