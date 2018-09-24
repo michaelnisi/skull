@@ -4,7 +4,7 @@
 
 > Everything should be made as simple as possible, but no simpler.<br>—*Albert Einstein*
 
-The **Skull** Swift package offers a bare bones (400 LOC) interface for [SQLite](https://www.sqlite.org/). Emphasising simplicity, its synchronous API implements a minimal set of functions for interacting with SQLite.
+The Skull Swift package offers a bare bones (400 LOC) interface for [SQLite](https://www.sqlite.org/). Emphasising simplicity, its synchronous API implements a minimal set of functions for interacting with SQLite.
 
 ## Example
 
@@ -41,7 +41,7 @@ skull.sync {
 }
 ```
 
-To build and run this example, in this repo, try:
+On macOS, building and running this example is easy.
 
 ```
 cd example
@@ -49,7 +49,7 @@ swift build
 swift run
 ```
 
-**Skull** is deliberately thin, its tiny API leaves access serialization to users. Leveraging a dedicated serial queue, as shown in the example above, intuitively ensures serialized access.
+Skull is deliberately thin, its tiny API leaves access serialization to users. Leveraging a dedicated serial queue, as shown in the example above, intuitively ensures serialized access.
 
 ## Types
 
@@ -202,11 +202,17 @@ I recommend [Xcode Workspaces](https://developer.apple.com/library/content/featu
 
 ### Swift Package Manager
 
-Experimentally, on macOS, you can use the [Package Manager](https://swift.org/package-manager/).
+Experimentally, on macOS, you can use the [Package Manager](https://swift.org/package-manager/). However, here, in `Libraries/CSqlite3/module.modulemap`, the path to the SQLite3 header is hard coded to the default Xcode macOS SDK location.
+
+```
+swift build
+````
+
+I like the agility of the command-line for testing.
 
 ```
 swift test
-````
+```
 
 ## License
 
