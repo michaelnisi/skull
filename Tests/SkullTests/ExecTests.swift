@@ -9,7 +9,6 @@
 import XCTest
 @testable import Skull
 
-// Interesting: all caps seems to be fine for enums in Swift 3.
 enum SQLiteTypeAffinity: String {
   case NULL = "null"
   case INTEGER = "integer"
@@ -198,7 +197,7 @@ class ExecTests: XCTestCase {
       }
     } catch SkullError.sqliteError(let code, let msg) {
       XCTAssertEqual(code, 4)
-      XCTAssertEqual(msg, "callback requested query abort")
+      XCTAssert(msg == "callback requested query abort" || msg == "query aborted")
       XCTAssertEqual(count, 1)
       thrown = true
     } catch {

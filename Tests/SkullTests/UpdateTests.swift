@@ -72,7 +72,7 @@ class UpdateTests: XCTestCase {
       try db.update("INSERT INTO t1 VALUES (?,?,?,?,?")
     } catch SkullError.sqliteError(let code, let msg) {
       XCTAssertEqual(code, 1)
-      XCTAssertEqual(msg, "near \"?\": syntax error")
+      XCTAssert(msg == "near \"?\": syntax error" || msg == "incomplete input")
     } catch {
       XCTFail("should not throw unexpected error")
     }

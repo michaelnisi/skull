@@ -1,5 +1,4 @@
 [![Build Status](https://secure.travis-ci.org/michaelnisi/skull.svg)](http://travis-ci.org/michaelnisi/skull)
-[![Code Coverage](https://codecov.io/github/michaelnisi/skull/coverage.svg?branch=master)](https://codecov.io/github/michaelnisi/skull?branch=master)
 
 # Skull - Swift SQLite
 
@@ -177,7 +176,7 @@ Close the database by simply dismissing the `Skull` object.
 
 Before building this software, we need to generate [module maps](http://clang.llvm.org/docs/Modules.html#module-maps) for the SQLite system library:
 
-```sh
+```
 make module
 ```
 
@@ -187,44 +186,26 @@ The [Xcode](https://developer.apple.com/xcode/) project in this repo provides ta
 
 You can conveniently run the tests with [Make](https://www.gnu.org/software/make/):
 
-```sh
+```
 $ make [check | check_macOS | check_iOS | check_watchOS | check_tvOS]
 ```
 
 And build the framework:
 
-```sh
+```
 $ make [macOS | iOS | watchOS | tvOS]
 ```
 
 Of course, you can also test and build using `xcodebuild` directly or from within Xcode.
 
-*I recommend [Xcode Workspaces](https://developer.apple.com/library/content/featuredarticles/XcodeConcepts/Concept-Workspace.html) for composing your programs.*
+I recommend [Xcode Workspaces](https://developer.apple.com/library/content/featuredarticles/XcodeConcepts/Concept-Workspace.html) for composing your programs.
 
 ### Swift Package Manager
 
-Experimentally, you can also build **Skull** with [SPM](https://swift.org/package-manager/) for your current platform.
-
-If you are a [pkgsrc](https://pkgsrc.joyent.com/install-on-osx/) user, you should be good to go. If not, you have to fix the path to the SQLite3 header, defined in the library module dependency `CSqlite3`, found in `Packages`. The `Packages` directory is created by `swift test` or `swift build`. [Here](https://github.com/cmacrae/savemacos) is a super easy way to **install pkgsrc on macOS**.
+Experimentally, on macOS, you can use the [Package Manager](https://swift.org/package-manager/).
 
 ```
-module CSqlite3 [system] {
-  header "/opt/pkg/include/sqlite3.h"
-  link "sqlite3"
-  export *
-}
-```
-
-Once you made sure SPM sees the SQLite system library, and all its dependencies, you can test **Skull** with:
-
-```sh
 swift test
-```
-
-And build the framework with:
-
-```sh
-swift build
 ````
 
 ## License

@@ -1,4 +1,4 @@
-// swift-tools-version:4.0
+// swift-tools-version:4.2
 
 import PackageDescription
 
@@ -7,11 +7,10 @@ let package = Package(
   products: [
     .library(name: "Skull", targets: ["Skull"])
   ],
-  dependencies: [
-    .package(url: "https://github.com/michaelnisi/csqlite.git", from: "1.0.0")
-  ],
   targets: [
-    .target(name: "Skull", dependencies: [], path: "Sources"),
-    .testTarget(name: "SkullTests", dependencies: ["Skull"]),
-  ]
+    .systemLibrary(name: "CSqlite3", path: "module/macosx"),
+    .target(name: "Skull", dependencies: ["CSqlite3"], path: "Sources"),
+    .testTarget(name: "SkullTests", dependencies: ["Skull"])
+  ],
+  swiftLanguageVersions: [.v4_2]
 )
