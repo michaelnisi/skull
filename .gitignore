@@ -6,7 +6,6 @@
 *.ipa
 *.mode1v3
 *.mode2v3
-*.modulemap
 *.moved-aside
 *.pbxuser
 *.perspectivev3
