@@ -1,5 +1,5 @@
 module CSqlite3 [system] {
-  header "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.14.sdk/usr/include/sqlite3.h"
+  header "shim.h"
   link "sqlite3"
   export *
 }
