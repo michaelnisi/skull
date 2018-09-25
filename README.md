@@ -202,7 +202,7 @@ I recommend [Xcode Workspaces](https://developer.apple.com/library/content/featu
 
 ### Swift Package Manager
 
-Experimentally, on macOS, you can use the [Package Manager](https://swift.org/package-manager/). However, here, in `Libraries/CSqlite3/module.modulemap`, the path to the SQLite3 header is hard coded to the default Xcode macOS SDK location.
+Experimentally, you can use the [Package Manager](https://swift.org/package-manager/).
 
 ```
 swift build
