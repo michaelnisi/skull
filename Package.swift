@@ -1,9 +1,12 @@
-// swift-tools-version:4.2
+// swift-tools-version:5.0
 
 import PackageDescription
 
 let package = Package(
   name: "Skull",
+  platforms: [
+    .iOS(.v10)
+  ],
   products: [
     .library(name: "Skull", targets: ["Skull"])
   ],
@@ -11,6 +14,5 @@ let package = Package(
     .systemLibrary(name: "CSqlite3", path: "Libraries/CSqlite3"),
     .target(name: "Skull", dependencies: ["CSqlite3"], path: "Sources"),
     .testTarget(name: "SkullTests", dependencies: ["Skull"])
-  ],
-  swiftLanguageVersions: [.v4_2]
+  ]
 )
