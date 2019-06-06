@@ -12,7 +12,7 @@ import XCTest
 class SerialTests: XCTestCase {
   
   func testExample() {
-    let skull: DispatchQueue = DispatchQueue(label: "ink.codes.skull")
+    let skull: DispatchQueue = DispatchQueue(label: "ink.codes.skull.SerialTests")
     let db = try! Skull()
     
     skull.async {
