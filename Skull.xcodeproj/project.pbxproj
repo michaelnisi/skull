@@ -414,11 +414,11 @@
 			};
 			buildConfigurationList = 4CFF8F8C1DA6C4F3008DF75F /* Build configuration list for PBXProject "Skull" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = 4CFF8F881DA6C4F3008DF75F;
 			productRefGroup = 4CFF8F9E1DA6C6D7008DF75F /* Products */;
