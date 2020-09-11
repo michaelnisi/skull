@@ -12,14 +12,18 @@ let package = Package(
       targets: ["Skull"]),
   ],
   dependencies: [
-    .package(url: "https://github.com/michaelnisi/csqlite.git", from: "1.0.0"),
+
   ],
   targets: [
     .target(
       name: "Skull",
-      dependencies: []),
+      dependencies: ["CSqlite3"]),
     .testTarget(
       name: "SkullTests",
       dependencies: ["Skull"]),
+    .systemLibrary(
+      name: "CSqlite3", path: "./CSqlite3"
+    )
   ]
 )
+

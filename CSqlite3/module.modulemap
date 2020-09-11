@@ -1,0 +1,5 @@
+module CSqlite3 [system] {
+  header "./CSqlite3-Bridging-Header.h"
+  link "CSqlite3"
+  export *
+}
