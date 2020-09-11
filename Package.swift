@@ -1,18 +1,25 @@
-// swift-tools-version:5.0
+// swift-tools-version:5.3
+// The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
 
 let package = Package(
   name: "Skull",
-  platforms: [
-    .iOS(.v10)
-  ],
+  platforms: [.iOS("13.0")],
   products: [
-    .library(name: "Skull", targets: ["Skull"])
+    .library(
+      name: "Skull",
+      targets: ["Skull"]),
+  ],
+  dependencies: [
+    .package(url: "https://github.com/michaelnisi/csqlite.git", from: "1.0.0"),
   ],
   targets: [
-    .systemLibrary(name: "CSqlite3", path: "Libraries/CSqlite3"),
-    .target(name: "Skull", dependencies: ["CSqlite3"], path: "Sources"),
-    .testTarget(name: "SkullTests", dependencies: ["Skull"])
+    .target(
+      name: "Skull",
+      dependencies: []),
+    .testTarget(
+      name: "SkullTests",
+      dependencies: ["Skull"]),
   ]
 )

@@ -1,6 +1,7 @@
 import XCTest
-@testable import SkullTests
 
-XCTMain([
-     testCase(SkullTests.allTests),
-])
+import SkullTests
+
+var tests = [XCTestCaseEntry]()
+tests += SkullTests.allTests()
+XCTMain(tests)

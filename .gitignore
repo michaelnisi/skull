@@ -13,6 +13,7 @@
 *.xccheckout
 *.xcuserstate
 .build
+.swiftpm
 DerivedData
 Packages
 build
