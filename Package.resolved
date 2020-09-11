@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "CSqlite3",
+        "repositoryURL": "https://github.com/michaelnisi/csqlite.git",
+        "state": {
+          "branch": null,
+          "revision": "60d12fef9219281dc3bb8c8555e25af0e8441508",
+          "version": "1.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
