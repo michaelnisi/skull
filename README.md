@@ -172,47 +172,9 @@ The location of the database file.
 
 Close the database by simply dismissing the `Skull` object.
 
-## Build and Install
+## Install
 
-Before building this software, we need to generate [module maps](http://clang.llvm.org/docs/Modules.html#module-maps) for the SQLite system library:
-
-```
-make module
-```
-
-### Xcode
-
-The [Xcode](https://developer.apple.com/xcode/) project in this repo provides targets for all [Apple platforms](https://developer.apple.com/discover/).
-
-You can conveniently run the tests with [Make](https://www.gnu.org/software/make/):
-
-```
-$ make [check | check_macOS | check_iOS | check_watchOS | check_tvOS]
-```
-
-And build the framework:
-
-```
-$ make [macOS | iOS | watchOS | tvOS]
-```
-
-Of course, you can also test and build using `xcodebuild` directly or from within Xcode.
-
-I recommend [Xcode Workspaces](https://developer.apple.com/library/content/featuredarticles/XcodeConcepts/Concept-Workspace.html) for composing your programs.
-
-### Swift Package Manager
-
-Experimentally, you can use the [Package Manager](https://swift.org/package-manager/).
-
-```
-swift build
-````
-
-I like the agility of the command-line for testing.
-
-```
-swift test
-```
+Add `https://github.com/michaelnisi/skull.git` to your package manifest.
 
 ## License
 

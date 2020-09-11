@@ -5,15 +5,13 @@ import PackageDescription
 
 let package = Package(
   name: "Skull",
-  platforms: [.iOS("13.0")],
+  platforms: [.iOS(.v13)],
   products: [
     .library(
       name: "Skull",
       targets: ["Skull"]),
   ],
-  dependencies: [
-
-  ],
+  dependencies: [],
   targets: [
     .target(
       name: "Skull",
