@@ -14,13 +14,10 @@ let package = Package(
   targets: [
     .target(
       name: "Skull",
-      dependencies: ["CSqlite3"]),
+      dependencies: []),
     .testTarget(
       name: "SkullTests",
-      dependencies: ["Skull"]),
-    .systemLibrary(
-      name: "CSqlite3", path: "./CSqlite3"
-    )
+      dependencies: ["Skull"])
   ]
 )
 

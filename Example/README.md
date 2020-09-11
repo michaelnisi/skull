@@ -1,3 +1,3 @@
-# CSqlite3
+# Example
 
 A description of this package.

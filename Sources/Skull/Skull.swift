@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import CSqlite3
+import SQLite3
 
 /// `SkullError` enumerates explicit errors.
 public enum SkullError: Error {

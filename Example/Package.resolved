@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "Skull",
+        "repositoryURL": "/Users/michael/swift/skull",
+        "state": {
+          "branch": null,
+          "revision": "ea22d4fa0d9360b4f93d09c62cf7d579b17a3775",
+          "version": "11.0.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
