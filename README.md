@@ -48,14 +48,6 @@ skull.sync {
 }
 ```
 
-On macOS, building and running this example is easy.
-
-```
-cd Example
-swift build
-swift run
-```
-
 Skull is deliberately thin, its tiny API leaves access serialization to users. Leveraging a dedicated serial queue, as shown in the example above, intuitively ensures serialized access.
 
 ## Types
