@@ -4,7 +4,7 @@
 
 > Everything should be made as simple as possible, but no simpler.<br>—*Albert Einstein*
 
-The Skull Swift package offers a bare bones (400 LOC) interface for [SQLite](https://www.sqlite.org/). Emphasising simplicity, its synchronous API implements a minimal set of functions for interacting with SQLite.
+The [Skull Swift package](https://swiftpackageindex.com/michaelnisi/skull) offers a bare bones (400 LOC) interface for [SQLite](https://www.sqlite.org/). Emphasising simplicity, its synchronous API implements a minimal set of functions for interacting with SQLite.
 
 ## Example
 
@@ -173,7 +173,7 @@ Close the database by simply dismissing the `Skull` object.
 
 ## Install
 
-Add `https://github.com/michaelnisi/skull.git` to your package manifest.
+📦 Add `https://github.com/michaelnisi/skull.git` to your package manifest.
 
 ## License
 
