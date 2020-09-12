@@ -3,7 +3,7 @@
     "pins": [
       {
         "package": "Skull",
-        "repositoryURL": "/Users/michael/swift/skull",
+        "repositoryURL": "https://github.com/michaelnisi/skull.git",
         "state": {
           "branch": null,
           "revision": "ea22d4fa0d9360b4f93d09c62cf7d579b17a3775",
