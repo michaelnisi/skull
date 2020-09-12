@@ -173,7 +173,7 @@ Close the database by simply dismissing the `Skull` object.
 
 ## Install
 
-📦 Add `https://github.com/michaelnisi/skull.git` to your package manifest.
+📦 Add `https://github.com/michaelnisi/skull` to your package dependencies.
 
 ## License
 
